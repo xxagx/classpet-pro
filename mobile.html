@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>我的宠物 - 二年级一班</title>
+    <link rel="stylesheet" href="assets/css/mobile.css?v=2">
+    <script>console.log('ClassPet Mobile v2.0.0 - 2026-03-18');</script>
+</head>
+<body>
+    <!-- 背景音乐 -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="assets/audio/background.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="app">
+        <!-- 欢迎弹窗 -->
+        <div class="welcome-modal active" id="welcomeModal">
+            <div class="welcome-content">
+                <div class="welcome-logo">🐾</div>
+                <h1 class="welcome-title">欢迎来到宠物乐园</h1>
+                <p class="welcome-class">二年级一班</p>
+                <p class="welcome-desc">和你的小伙伴一起成长吧！</p>
+                <button class="btn-welcome" id="btnWelcome">开启旅程 🎵</button>
+            </div>
+        </div>
+
+        <!-- 登录页面 -->
+        <div id="loginPage" class="page">
+            <div class="login-container">
+                <div class="logo">🐾</div>
+                <h1>我的宠物</h1>
+                <p class="class-name">二年级一班</p>
+                
+                <div class="form-group">
+                    <label>选择你的名字</label>
+                    <select id="studentSelect">
+                        <option value="">请选择...</option>
+                    </select>
+                </div>
+                
+                <button class="btn-primary" id="btnLogin">查看我的宠物 🚀</button>
+                
+                <!-- 音乐控制 -->
+                <div class="music-control">
+                    <button class="btn-music-toggle" id="btnMusicToggle">
+                        <span class="music-icon">🎵</span>
+                        <span class="music-text">背景音乐</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 宠物主页 -->
+        <div id="petPage" class="page">
+            <header class="mobile-header">
+                <h1 id="petHeaderName">我的宠物</h1>
+                <div class="header-right">
+                    <button class="btn-music-mini" id="btnMusicMini">🎵</button>
+                    <button class="btn-logout" id="btnLogout">退出</button>
+                </div>
+            </header>
+
+            <div class="pet-main">
+                <!-- 宠物展示 -->
+                <div class="pet-display-large">
+                    <div id="petImageContainer" class="pet-image-container stage-egg">
+                        <div id="petEmoji" class="pet-emoji">🥚</div>
+                    </div>
+                    <div id="petStage" class="pet-stage">蛋</div>
+                </div>
+
+                <!-- 学生信息 -->
+                <div class="student-info">
+                    <div class="info-row">
+                        <span class="label">姓名</span>
+                        <span class="value" id="studentName">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">班级</span>
+                        <span class="value" id="className">二年级一班</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">积分</span>
+                        <span class="value score" id="studentScore">0</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">宠物名称</span>
+                        <span class="value" id="petName">未认养</span>
+                    </div>
+                </div>
+
+                <!-- 宠物状态面板 -->
+                <div class="pet-status-panel" id="petStatusPanel">
+                    <h3 class="status-title">📊 宠物状态</h3>
+                    <div class="status-container">
+                        <div class="status-item">
+                            <div class="status-header">
+                                <span class="status-icon">🍖</span>
+                                <span class="status-name">饱食度</span>
+                                <span class="status-value" id="hungerValue">50</span>
+                            </div>
+                            <div class="status-bar">
+                                <div class="status-fill hunger" id="hungerBar" style="width: 50%"></div>
+                            </div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-header">
+                                <span class="status-icon">😊</span>
+                                <span class="status-name">开心值</span>
+                                <span class="status-value" id="happinessValue">50</span>
+                            </div>
+                            <div class="status-bar">
+                                <div class="status-fill happiness" id="happinessBar" style="width: 50%"></div>
+                            </div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-header">
+                                <span class="status-icon">⚡</span>
+                                <span class="status-name">精力值</span>
+                                <span class="status-value" id="energyValue">50</span>
+                            </div>
+                            <div class="status-bar">
+                                <div class="status-fill energy" id="energyBar" style="width: 50%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pet-mood" id="petMood">
+                        <span class="mood-emoji">😊</span>
+                        <span class="mood-text">状态良好</span>
+                    </div>
+                </div>
+
+                <!-- 宠物互动按钮 -->
+                <div class="pet-interactions" id="petInteractions">
+                    <button class="btn-interact" id="btnFeed">
+                        <span class="interact-icon">🍖</span>
+                        <span class="interact-text">喂食</span>
+                    </button>
+                    <button class="btn-interact" id="btnPlay">
+                        <span class="interact-icon">🎾</span>
+                        <span class="interact-text">玩耍</span>
+                    </button>
+                    <button class="btn-interact" id="btnRest">
+                        <span class="interact-icon">😴</span>
+                        <span class="interact-text">休息</span>
+                    </button>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="actions">
+                    <button class="btn-action" id="btnAdopt">🏠 认养宠物</button>
+                    <button class="btn-action" id="btnCustomize">🎨 自定义形象</button>
+                    <button class="btn-action" id="btnRedeem">🎁 兑换奖励</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 认养弹窗 -->
+        <div class="modal" id="adoptModal">
+            <div class="modal-content">
+                <h2>🏠 认养宠物</h2>
+                <p class="current-score">当前积分: <span id="adoptScore">0</span></p>
+                <div class="pet-options" id="petOptions">
+                </div>
+                <button class="btn-close" id="closeAdopt">关闭</button>
+            </div>
+        </div>
+
+        <!-- 自定义形象弹窗 -->
+        <div class="modal" id="customizeModal">
+            <div class="modal-content">
+                <h2>🎨 自定义宠物形象</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-placeholder">
+                        <span>📷</span>
+                        <p>点击或拖拽上传图片</p>
+                        <p class="hint">支持 JPG、PNG，建议尺寸 512x512</p>
+                    </div>
+                    <input type="file" id="imageInput" accept="image/*" hidden>
+                </div>
+                <button class="btn-save" id="saveCustomImage">保存</button>
+                <button class="btn-close" id="closeCustomize">关闭</button>
+            </div>
+        </div>
+
+        <!-- 兑换奖励弹窗 -->
+        <div class="modal" id="redeemModal">
+            <div class="modal-content">
+                <h2>🎁 兑换奖励</h2>
+                <p class="current-score">当前积分: <span id="redeemScore">0</span></p>
+                <div class="reward-list" id="rewardList">
+                </div>
+                <button class="btn-close" id="closeRedeem">关闭</button>
+            </div>
+        </div>
+
+        <!-- 提示弹窗 -->
+        <div class="modal" id="alertModal">
+            <div class="modal-content modal-small">
+                <h2 id="alertTitle">提示</h2>
+                <p id="alertMessage">消息内容</p>
+                <button class="btn-primary" id="closeAlert">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data-manager.js"></script>
+    <script src="js/pets.js"></script>
+    <script src="js/pet-database.js"></script>
+    <script src="js/mobile.js"></script>
+</body>
+</html>

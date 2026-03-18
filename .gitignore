@@ -1,0 +1,21 @@
+# 忽略文件
+.DS_Store
+*.log
+node_modules/
+__pycache__/
+*.pyc
+.env
+.env.local
+
+# 忽略大文件
+*.mp4
+*.mp3
+*.pdf
+
+# 保留背景音乐
+!assets/audio/background.mp3
+
+# 保留内容文件
+!content/
+!output/
+!data/

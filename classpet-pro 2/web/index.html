@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ClassPet Pro - 班级宠物养成</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 顶部标题栏 -->
+        <header class="header">
+            <h1 class="class-name">🌟 三年级一班宠物乐园</h1>
+            <div class="header-actions">
+                <button class="btn-teacher" id="btnTeacher">👨‍🏫 教师模式</button>
+            </div>
+        </header>
+
+        <!-- 宠物展示区 -->
+        <main class="pet-grid" id="petGrid">
+            <!-- 动态生成40个宠物卡片 -->
+        </main>
+
+        <!-- 学生详情弹窗 -->
+        <div class="modal" id="studentModal">
+            <div class="modal-content">
+                <span class="close-btn" id="closeModal">&times;</span>
+                <div class="student-detail">
+                    <div class="pet-display">
+                        <img id="detailPetImage" src="" alt="宠物">
+                        <div class="evolution-effect" id="evolutionEffect"></div>
+                    </div>
+                    <h2 id="detailName">学生姓名</h2>
+                    <div class="score-section">
+                        <div class="current-score">
+                            <span class="score-label">当前积分</span>
+                            <span class="score-value" id="detailScore">0</span>
+                        </div>
+                        <div class="score-controls">
+                            <button class="btn-score btn-minus" data-value="-5">-5</button>
+                            <button class="btn-score btn-minus" data-value="-1">-1</button>
+                            <button class="btn-score btn-plus" data-value="+1">+1</button>
+                            <button class="btn-score btn-plus" data-value="+5">+5</button>
+                            <button class="btn-score btn-plus" data-value="+10">+10</button>
+                        </div>
+                    </div>
+                    <div class="progress-section">
+                        <div class="stage-info">
+                            <span id="currentStage">蛋</span>
+                            <span class="arrow">→</span>
+                            <span id="nextStage">幼崽</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-text">
+                            还需 <span id="needScore">50</span> 分升级
+                        </div>
+                    </div>
+                    <div class="rewards-section">
+                        <h3>🏆 已获得奖励</h3>
+                        <div class="rewards-list" id="rewardsList">
+                            <span class="no-rewards">暂无奖励</span>
+                        </div>
+                    </div>
+                    <button class="btn-redeem" id="btnRedeem">🎁 兑换奖励</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 教师模式密码弹窗 -->
+        <div class="modal" id="teacherModal">
+            <div class="modal-content modal-small">
+                <h2>🔐 教师验证</h2>
+                <div class="password-input">
+                    <input type="password" id="teacherPassword" placeholder="请输入4位密码" maxlength="4">
+                </div>
+                <div class="numpad" id="numpad">
+                    <button>1</button><button>2</button><button>3</button>
+                    <button>4</button><button>5</button><button>6</button>
+                    <button>7</button><button>8</button><button>9</button>
+                    <button class="btn-clear">C</button><button>0</button><button class="btn-ok">✓</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 教师管理面板 -->
+        <div class="modal" id="adminModal">
+            <div class="modal-content modal-large">
+                <span class="close-btn" id="closeAdmin">&times;</span>
+                <h2>⚙️ 班级管理</h2>
+                <div class="admin-tabs">
+                    <button class="tab-btn active" data-tab="students">👥 学生管理</button>
+                    <button class="tab-btn" data-tab="settings">🔧 进化设置</button>
+                    <button class="tab-btn" data-tab="rewards">🎁 奖励设置</button>
+                    <button class="tab-btn" data-tab="data">💾 数据管理</button>
+                </div>
+                <div class="tab-content" id="tabContent">
+                    <!-- 动态内容 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 兑换奖励弹窗 -->
+        <div class="modal" id="redeemModal">
+            <div class="modal-content">
+                <span class="close-btn" id="closeRedeem">&times;</span>
+                <h2>🎁 兑换奖励</h2>
+                <div class="redeem-list" id="redeemList">
+                    <!-- 动态生成奖励列表 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 进化庆祝弹窗 -->
+        <div class="modal celebration" id="celebrationModal">
+            <div class="celebration-content">
+                <div class="celebration-pet" id="celebrationPet"></div>
+                <h1 class="celebration-title">🎉 恭喜进化！</h1>
+                <p class="celebration-text" id="celebrationText"></p>
+                <button class="btn-celebrate" id="btnCelebrate">太棒了！</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

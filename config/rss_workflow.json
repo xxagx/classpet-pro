@@ -1,0 +1,153 @@
+{
+  "workflow_name": "酒店渠道参谋 - 每日热点自动化",
+  "version": "1.0",
+  "schedule": {
+    "frequency": "daily",
+    "time": "09:00",
+    "timezone": "Asia/Shanghai"
+  },
+  "steps": [
+    {
+      "step": 1,
+      "name": "RSS抓取（主数据源）",
+      "action": "fetch_rss",
+      "note": "Firecrawl作为可选补充，用于无RSS的公众号文章抓取",
+      "sources": {
+        "hotel_ota": [
+          {"name": "Skift", "url": "https://skift.com/feed/"},
+          {"name": "PhocusWire", "url": "https://www.phocuswire.com/rss"},
+          {"name": "Hospitality Net", "url": "https://hospitalitynet.org/rss"},
+          {"name": "Hotel News Now", "url": "https://www.hotelnewsnow.com/rss"},
+          {"name": "Travel Weekly", "url": "https://www.travelweekly.com/rss"},
+          {"name": "环球旅讯", "url": "https://www.traveldaily.cn/rss"},
+          {"name": "品橙旅游", "url": "https://www.pinchain.com/rss"},
+          {"name": "闻旅", "url": "https://www.wenlvnews.com/rss"}
+        ],
+        "business": [
+          {"name": "虎嗅", "url": "https://www.huxiu.com/rss/0.xml"},
+          {"name": "36Kr", "url": "https://36kr.com/feed"},
+          {"name": "晚点LatePost", "url": "https://www.latepost.com/rss"},
+          {"name": "远川研究所", "url": "https://www.yuanchuan.cn/feed"}
+        ],
+        "global_insight": [
+          {"name": "HBR", "url": "https://hbr.org/feed"},
+          {"name": "MIT Tech Review", "url": "https://www.technologyreview.com/feed/"},
+          {"name": "The Economist", "url": "https://www.economist.com/latest/rss.xml"}
+        ],
+        "management": [
+          {"name": "Management Today", "url": "https://www.managementtoday.co.uk/rss"},
+          {"name": "Strategy+Business", "url": "https://www.strategy-business.com/rss"},
+          {"name": "Fast Company", "url": "https://www.fastcompany.com/rss"}
+        ],
+        "news": [
+          {"name": "Reuters Business", "url": "https://www.reuters.com/rssFeed/businessNews"}
+        ]
+      },
+      "output": "data/raw_feeds_{date}.json",
+      "max_items_per_source": 10,
+      "fallback": {
+        "enabled": false,
+        "tool": "firecrawl",
+        "condition": "RSS源失效或需要抓取公众号文章时手动启用"
+      }
+    },
+    {
+      "step": 2,
+      "name": "AI筛选与选题",
+      "action": "ai_filter",
+      "prompt": "你是一位资深酒店行业内容策划，负责为'酒店渠道参谋'账号筛选每日热点。\n\n输入：今日RSS抓取的文章列表（标题+摘要+来源）\n\n筛选标准（按优先级排序）：\n1. **时效性**：3天内发生或发布的消息\n2. **冲突性**：有争议、反常识、能引发讨论的话题\n3. **实操性**：中小酒店能直接应用的方法论\n4. **数据支撑**：有具体数字、案例的内容\n5. **差异化**：避开已被大量报道的同质化话题\n\n输出格式（JSON）：\n{\n  \"selected_topics\": [\n    {\n      \"rank\": 1,\n      \"title\": \"文章原标题\",\n      \"source\": \"来源名称\",\n      \"why_selected\": \"选择理由（一句话）\",\n      \"angle_suggestion\": \"建议切入角度\",\n      \"content_type\": \"视频/图文/均可\",\n      \"hook_potential\": \"高/中/低\"\n    }\n  ],\n  \"summary\": \"今日热点趋势一句话总结\"\n}\n\n要求：选出TOP 10选题，按爆款潜力排序",
+      "output": "data/selected_topics_{date}.json"
+    },
+    {
+      "step": 3,
+      "name": "生成公众号文章",
+      "action": "generate_article",
+      "for_each": "selected_topics[0:3]",
+      "template": "长图文深度分析",
+      "style_guide": {
+        "tone": "专业但有温度，像经验丰富的顾问在分享",
+        "structure": [
+          "痛点引入（100字）",
+          "现象描述+数据（200字）",
+          "深层原因分析（300字）",
+          "实操方法论（400字）",
+          "案例佐证（200字）",
+          "总结+行动号召（100字）"
+        ],
+        "word_count": "1500-2000字",
+        "must_include": ["至少1个数据点", "至少1个可操作方法", "至少1个真实案例"]
+      },
+      "output_pattern": "content/{date}_article_{topic_id}.md"
+    },
+    {
+      "step": 4,
+      "name": "生成视频号脚本",
+      "action": "generate_video_script",
+      "for_each": "selected_topics[0]",
+      "template": "75-85秒PPT讲解",
+      "structure": {
+        "0-3s": "标题卡+痛点提问",
+        "3-15s": "问题放大",
+        "15-60s": "核心内容（PPT分页，每页1观点+1数据）",
+        "60-75s": "方法论总结",
+        "75-85s": "转化钩子",
+        "ending": "固定Slogan"
+      },
+      "constraints": {
+        "duration": "75-85秒",
+        "words": "约250-280字",
+        "style": "冷静男声配音，口语化但专业",
+        "visual": "PPT录屏，深色背景白字红色强调"
+      },
+      "output": "content/{date}_video_script.md"
+    },
+    {
+      "step": 5,
+      "name": "生成Seedance画面Prompt",
+      "action": "generate_visual_prompts",
+      "for": "video_script",
+      "style": "professional business presentation, dark background, clean lines, data visualization, isometric 3D style when appropriate",
+      "output": "content/{date}_visual_prompts.md"
+    },
+    {
+      "step": 6,
+      "name": "生成标题选项",
+      "action": "generate_titles",
+      "count": 5,
+      "styles": [
+        "悬念型：90%的人不知道...",
+        "数字型：3个成本、4个法则...",
+        "反问型：这类客人到底接不接？",
+        "冲突型：ADR高但可能是埋雷",
+        "权威型：展会季收益管理指南"
+      ],
+      "output": "content/{date}_title_options.md"
+    },
+    {
+      "step": 7,
+      "name": "生成封面文案",
+      "action": "generate_cover_copy",
+      "formats": ["视频号封面", "公众号首图", "朋友圈海报"],
+      "constraints": {
+        "video_cover": "不超过10个字，大字报风格",
+        "article_banner": "主标题+副标题，层次分明",
+        "moments_poster": "金句+二维码引导"
+      },
+      "output": "content/{date}_cover_copy.md"
+    },
+    {
+      "step": 8,
+      "name": "推送飞书",
+      "action": "send_feishu",
+      "target": "https://open.feishu.cn/open-apis/bot/v2/hook/47fe1f04-458f-4059-977c-203837bac621",
+      "message_template": "📊 今日热点摘要\n\n{{summary}}\n\n---\n\n🎯 TOP 3 推荐选题\n{{top3_topics}}\n\n---\n\n✅ 今日交付物\n- 公众号文章：3篇\n- 视频号脚本：1份（含画面Prompt）\n- 标题选项：5组\n- 封面文案：3套\n\n📁 文件位置：content/{{date}}/"
+    }
+  ],
+  "quality_check": {
+    "before_publish": [
+      "检查是否有敏感词或公司机密信息",
+      "确认数据来源可追溯",
+      "验证方法论可操作性"
+    ]
+  }
+}

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ClassPet Pro - 教师管理</title>
+    <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 顶部 -->
+        <header class="admin-header">
+            <h1>👨‍🏫 ClassPet 管理端</h1>
+            <div class="header-info">
+                <span class="class-name">二年级一班</span>
+                <span class="student-count">38人</span>
+            </div>
+            <a href="index.html" class="btn-back">🏠 返回主页</a>
+        </header>
+
+        <!-- 主内容 -->
+        <main class="admin-main">
+            <!-- 快捷操作 -->
+            <section class="quick-actions">
+                <h2>⚡ 快捷操作</h2>
+                <div class="action-grid">
+                    <button class="action-btn" id="btnAddScore">
+                        <span class="icon">➕</span>
+                        <span class="label">批量加分</span>
+                    </button>
+                    <button class="action-btn" id="btnQuickRedeem">
+                        <span class="icon">🎁</span>
+                        <span class="label">兑换奖励</span>
+                    </button>
+                    <button class="action-btn" id="btnExport">
+                        <span class="icon">📊</span>
+                        <span class="label">导出数据</span>
+                    </button>
+                    <button class="action-btn" id="btnSettings">
+                        <span class="icon">⚙️</span>
+                        <span class="label">班级设置</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- 统计报表 -->
+            <section class="stats-section">
+                <h2>📈 统计报表</h2>
+                <div class="stats-cards">
+                    <div class="stats-card">
+                        <div class="stats-icon">👥</div>
+                        <div class="stats-info">
+                            <div class="stats-value" id="statsTotalStudents">38</div>
+                            <div class="stats-label">总人数</div>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon">⭐</div>
+                        <div class="stats-info">
+                            <div class="stats-value" id="statsTotalScore">0</div>
+                            <div class="stats-label">总积分</div>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon">📊</div>
+                        <div class="stats-info">
+                            <div class="stats-value" id="statsAverageScore">0</div>
+                            <div class="stats-label">平均分</div>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon">🏆</div>
+                        <div class="stats-info">
+                            <div class="stats-value" id="statsHighestScore">0</div>
+                            <div class="stats-label">最高分</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>积分趋势（近7天）</h3>
+                        <canvas id="scoreTrendChart" class="chart-canvas"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>阶段分布</h3>
+                        <canvas id="stageDistributionChart" class="chart-canvas"></canvas>
+                    </div>
+                </div>
+
+                <div class="top-students-section">
+                    <h3>🏅 积分排行榜</h3>
+                    <div class="top-students-list" id="topStudentsList">
+                        <!-- 动态生成 -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 学生列表 -->
+            <section class="student-list-section">
+                <div class="section-header">
+                    <h2>👥 学生管理</h2>
+                    <div class="search-box">
+                        <input type="text" id="searchStudent" placeholder="搜索学生...">
+                        <button id="btnAddStudent">➕ 添加</button>
+                    </div>
+                </div>
+                <div class="student-list" id="studentList">
+                    <!-- 动态生成 -->
+                </div>
+            </section>
+        </main>
+
+        <!-- 学生详情/编辑弹窗 -->
+        <div class="modal" id="studentEditModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="editModalTitle">编辑学生</h3>
+                    <button class="close-btn" id="closeEditModal">&times;</button>
+                </div>
+                <div class="form-group">
+                    <label>姓名</label>
+                    <input type="text" id="editName" placeholder="学生姓名">
+                </div>
+                <div class="form-group">
+                    <label>当前积分</label>
+                    <input type="number" id="editScore" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label>当前阶段</label>
+                    <div class="stage-display" id="editStage">蛋</div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-secondary" id="btnCancelEdit">取消</button>
+                    <button class="btn-primary" id="btnSaveStudent">保存</button>
+                    <button class="btn-danger" id="btnDeleteStudent">删除</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 批量加分弹窗 -->
+        <div class="modal" id="batchScoreModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>批量加分</h3>
+                    <button class="close-btn" id="closeBatchModal">&times;</button>
+                </div>
+                <div class="batch-options">
+                    <label>选择学生</label>
+                    <div class="student-select-list" id="batchStudentList">
+                        <!-- 复选框列表 -->
+                    </div>
+                    <div class="select-all">
+                        <input type="checkbox" id="selectAll">
+                        <label for="selectAll">全选</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>加分数量</label>
+                    <div class="score-input-group">
+                        <button class="btn-score-preset" data-value="1">+1</button>
+                        <button class="btn-score-preset" data-value="5">+5</button>
+                        <button class="btn-score-preset" data-value="10">+10</button>
+                        <input type="number" id="batchScoreValue" placeholder="自定义">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-secondary" id="btnCancelBatch">取消</button>
+                    <button class="btn-primary" id="btnConfirmBatch">确认加分</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 班级设置弹窗 -->
+        <div class="modal" id="settingsModal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h3>⚙️ 班级设置</h3>
+                    <button class="close-btn" id="closeSettingsModal">&times;</button>
+                </div>
+                
+                <div class="settings-tabs">
+                    <button class="tab-btn active" data-tab="basic">基础设置</button>
+                    <button class="tab-btn" data-tab="sync">数据同步</button>
+                    <button class="tab-btn" data-tab="stages">进化阶段</button>
+                    <button class="tab-btn" data-tab="rewards">奖励设置</button>
+                </div>
+                
+                <div class="tab-content" id="settingsContent">
+                    <!-- 基础设置 -->
+                    <div class="tab-panel active" data-panel="basic">
+                        <div class="form-group">
+                            <label>班级名称</label>
+                            <input type="text" id="settingClassName" value="二年级一班">
+                        </div>
+                        <div class="form-group">
+                            <label>教师密码</label>
+                            <input type="text" id="settingPassword" value="1234">
+                        </div>
+                    </div>
+
+                    <!-- 数据同步设置 -->
+                    <div class="tab-panel" data-panel="sync">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="enableCloudSync">
+                                启用飞书Bitable云同步
+                            </label>
+                            <p style="font-size: 12px; color: #666; margin-top: 5px;">
+                                启用后将自动同步数据到飞书多维表格，方便多设备协作
+                            </p>
+                        </div>
+
+                        <div id="feishuConfigSection" style="display: none;">
+                            <div class="form-group">
+                                <label>飞书App Token</label>
+                                <input type="text" id="feishuAppToken" placeholder="bascnxxxxxxx">
+                                <p style="font-size: 12px; color: #999; margin-top: 3px;">
+                                    从飞书多维表格URL中获取，例如：https://xxx.feishu.cn/base/bascnxxxxxxx
+                                </p>
+                            </div>
+
+                            <div class="form-group">
+                                <label>飞书Table ID</label>
+                                <input type="text" id="feishuTableId" placeholder="tblxxxxxxx">
+                                <p style="font-size: 12px; color: #999; margin-top: 3px;">
+                                    表格ID，可在表格设置中查看
+                                </p>
+                            </div>
+
+                            <div class="form-group">
+                                <label>访问令牌 (Access Token)</label>
+                                <input type="password" id="feishuAccessToken" placeholder="cli_xxxxxxxxx">
+                                <p style="font-size: 12px; color: #999; margin-top: 3px;">
+                                    飞书API访问令牌，需要具有多维表格的读写权限
+                                </p>
+                            </div>
+
+                            <div class="form-actions" style="margin-top: 20px;">
+                                <button class="btn-secondary" id="btnTestConnection">🔗 测试连接</button>
+                                <button class="btn-primary" id="btnCreateTable">➕ 创建表格</button>
+                            </div>
+
+                            <div id="connectionStatus" style="margin-top: 15px; padding: 10px; border-radius: 8px; font-size: 14px; display: none;"></div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label>自动同步间隔（秒）</label>
+                            <input type="number" id="syncInterval" value="30" min="10" max="300">
+                            <p style="font-size: 12px; color: #666; margin-top: 3px;">
+                                建议设置为30-60秒，避免频繁请求
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- 进化阶段 -->
+                    <div class="tab-panel" data-panel="stages">
+                        <div class="stages-list" id="stagesList">
+                            <!-- 动态生成 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 奖励设置 -->
+                    <div class="tab-panel" data-panel="rewards">
+                        <div class="rewards-list" id="rewardsList">
+                            <!-- 动态生成 -->
+                        </div>
+                        <button class="btn-add" id="btnAddReward">➕ 添加奖励</button>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn-secondary" id="btnCancelSettings">取消</button>
+                    <button class="btn-primary" id="btnSaveSettings">保存设置</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 导出弹窗 -->
+        <div class="modal" id="exportModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>📊 导出数据</h3>
+                    <button class="close-btn" id="closeExportModal">&times;</button>
+                </div>
+                <div class="export-options">
+                    <button class="export-btn" id="exportExcel">
+                        <span class="icon">📗</span>
+                        <span>导出Excel</span>
+                    </button>
+                    <button class="export-btn" id="exportJSON">
+                        <span class="icon">📄</span>
+                        <span>导出JSON</span>
+                    </button>
+                    <button class="export-btn" id="shareData">
+                        <span class="icon">🔗</span>
+                        <span>分享数据</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!--  Toast 提示 -->
+        <div class="toast" id="toast"></div>
+    </div>
+
+    <script src="js/data-manager.js"></script>
+    <script src="js/pets.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/effects.js"></script>
+    <script src="js/feishu-sync.js"></script>
+    <script src="js/stats.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

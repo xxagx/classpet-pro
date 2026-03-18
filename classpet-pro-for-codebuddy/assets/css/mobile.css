@@ -1,0 +1,776 @@
+/* Mobile CSS - 手机端样式 */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+#app {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: #f5f5f5;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}
+
+/* 页面切换 */
+.page {
+    display: none;
+    min-height: 100vh;
+}
+
+.page.active {
+    display: block;
+}
+
+/* 登录页面 */
+#loginPage {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 40px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+    color: white;
+}
+
+.logo {
+    font-size: 80px;
+    margin-bottom: 20px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.login-container h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.class-name {
+    font-size: 16px;
+    opacity: 0.9;
+    margin-bottom: 40px;
+}
+
+.form-group {
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.form-group select {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.95);
+    color: #333;
+    outline: none;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 16px;
+    font-size: 18px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+    transition: transform 0.2s;
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+/* 手机端头部 */
+.mobile-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.mobile-header h1 {
+    font-size: 20px;
+}
+
+.btn-logout {
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* 宠物主页 */
+.pet-main {
+    padding: 20px;
+}
+
+.pet-display-large {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.pet-image-container {
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.pet-emoji {
+    font-size: 100px;
+}
+
+.pet-stage {
+    font-size: 18px;
+    color: #666;
+    font-weight: 500;
+}
+
+.pet-image-custom {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* 阶段背景色 */
+.stage-egg { background: #FFE4B5; }
+.stage-baby { background: #98FB98; }
+.stage-young { background: #87CEEB; }
+.stage-adult { background: #DDA0DD; }
+
+/* 学生信息 */
+.student-info {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-row .label {
+    color: #666;
+    font-size: 15px;
+}
+
+.info-row .value {
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
+}
+
+.info-row .value.score {
+    color: #667eea;
+    font-size: 24px;
+}
+
+/* 操作按钮 */
+.actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.btn-action {
+    padding: 20px 10px;
+    background: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-action:active {
+    transform: scale(0.98);
+}
+
+/* 弹窗 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    width: 100%;
+    max-height: 80vh;
+    border-radius: 20px 20px 0 0;
+    padding: 25px 20px;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.modal-content h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.modal-small {
+    max-width: 320px;
+    max-height: auto;
+    border-radius: 16px;
+    margin: auto;
+}
+
+/* 认养弹窗 */
+.current-score {
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.current-score span {
+    font-weight: 600;
+    color: #667eea;
+    font-size: 20px;
+}
+
+.pet-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.pet-option {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+}
+
+.pet-option:active {
+    transform: scale(0.95);
+}
+
+.pet-option.selected {
+    border-color: #667eea;
+    background: #f0f3ff;
+}
+
+.pet-option .emoji {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.pet-option .name {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.pet-option .rarity {
+    font-size: 12px;
+    color: #666;
+}
+
+.pet-option .cost {
+    font-size: 16px;
+    font-weight: 600;
+    color: #667eea;
+    margin-top: 10px;
+}
+
+/* 稀有度颜色 */
+.rarity-common { color: #999; }
+.rarity-rare { color: #4CAF50; }
+.rarity-epic { color: #9C27B0; }
+.rarity-legendary { color: #FF9800; }
+
+/* 上传区域 */
+.upload-area {
+    border: 2px dashed #ddd;
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.upload-placeholder {
+    pointer-events: none;
+}
+
+.upload-placeholder span {
+    font-size: 50px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.upload-placeholder p {
+    color: #666;
+    margin: 5px 0;
+}
+
+.upload-placeholder .hint {
+    font-size: 12px;
+    color: #999;
+}
+
+/* 奖励列表 */
+.reward-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.reward-item {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.reward-info {
+    flex: 1;
+}
+
+.reward-name {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.reward-cost {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.reward-stock {
+    font-size: 12px;
+    color: #999;
+}
+
+.btn-redeem {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-redeem:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 按钮 */
+.btn-close, .btn-save {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn-save {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+/* 宠物状态面板 */
+.pet-status-panel {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.status-title {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.status-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.status-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.status-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-icon {
+    font-size: 18px;
+}
+
+.status-name {
+    flex: 1;
+    font-size: 14px;
+    color: #666;
+}
+
+.status-value {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+}
+
+.status-bar {
+    height: 8px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.status-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.status-fill.hunger {
+    background: linear-gradient(90deg, #ff6b6b, #ffa500);
+}
+
+.status-fill.happiness {
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+}
+
+.status-fill.energy {
+    background: linear-gradient(90deg, #2196F3, #03A9F4);
+}
+
+/* 状态警告样式 */
+.status-fill.warning {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* 宠物心情 */
+.pet-mood {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+.mood-emoji {
+    font-size: 24px;
+}
+
+.mood-text {
+    font-size: 14px;
+    color: #666;
+}
+
+/* 宠物互动按钮 */
+.pet-interactions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.btn-interact {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 15px 10px;
+    background: white;
+    border: 2px solid #f0f0f0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-interact:active {
+    transform: scale(0.95);
+    border-color: #667eea;
+    background: #f8f9ff;
+}
+
+.interact-icon {
+    font-size: 28px;
+}
+
+.interact-text {
+    font-size: 12px;
+    color: #666;
+}
+
+/* 状态等级颜色 */
+.status-low { color: #ff4444; }
+.status-medium { color: #ff9800; }
+.status-high { color: #4CAF50; }
+
+/* 欢迎弹窗 */
+.welcome-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.5s ease;
+}
+
+.welcome-modal.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.welcome-content {
+    text-align: center;
+    color: white;
+    padding: 40px 30px;
+    animation: scaleIn 0.5s ease 0.2s both;
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.welcome-logo {
+    font-size: 100px;
+    margin-bottom: 20px;
+    animation: bounce 2s infinite;
+}
+
+.welcome-title {
+    font-size: 28px;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.welcome-class {
+    font-size: 20px;
+    margin-bottom: 10px;
+    opacity: 0.9;
+}
+
+.welcome-desc {
+    font-size: 16px;
+    opacity: 0.8;
+    margin-bottom: 40px;
+}
+
+.btn-welcome {
+    padding: 18px 50px;
+    font-size: 20px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(240, 147, 251, 0.5);
+    transition: all 0.3s;
+    animation: pulseBtn 2s infinite;
+}
+
+@keyframes pulseBtn {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.btn-welcome:active {
+    transform: scale(0.95);
+}
+
+/* 音乐控制 */
+.music-control {
+    margin-top: 30px;
+}
+
+.btn-music-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-music-toggle:active {
+    transform: scale(0.95);
+    background: rgba(255,255,255,0.3);
+}
+
+.btn-music-toggle.playing {
+    background: rgba(76, 175, 80, 0.4);
+}
+
+.btn-music-toggle .music-icon {
+    font-size: 18px;
+}
+
+/* 头部右侧 */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-music-mini {
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-music-mini:active {
+    transform: scale(0.95);
+}
+
+.btn-music-mini.playing {
+    animation: musicPulse 1s infinite;
+}
+
+@keyframes musicPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* 触摸优化 */
+.btn-primary, .btn-action, .btn-interact, .btn-welcome, 
+.btn-music-toggle, .btn-music-mini, .btn-logout,
+.pet-option, .btn-redeem, .btn-close, .btn-save {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
+}
+
+/* 安全区域适配 */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .pet-main {
+        padding-bottom: calc(20px + env(safe-area-inset-bottom));
+    }
+    
+    .modal-content {
+        padding-bottom: calc(25px + env(safe-area-inset-bottom));
+    }
+}
+
+/* 响应式优化 */
+@media screen and (max-width: 360px) {
+    .welcome-logo { font-size: 80px; }
+    .welcome-title { font-size: 24px; }
+    .logo { font-size: 60px; }
+    .pet-image-container { width: 160px; height: 160px; }
+    .pet-emoji { font-size: 80px; }
+}
+
+@media screen and (min-height: 800px) {
+    .welcome-content { padding: 60px 30px; }
+    .welcome-logo { font-size: 120px; }
+}

@@ -1,0 +1,185 @@
+# RSS监控源配置
+# 更新时间：2026-03-05
+# 总计：40个源
+
+hotel_ota:
+  name: "酒店/OTA行业（最核心）"
+  sources:
+    - id: skift
+      name: Skift
+      url: https://skift.com/feed/
+      priority: high
+    - id: phocuswire
+      name: PhocusWire
+      url: https://www.phocuswire.com/rss
+      priority: high
+    - id: hospitalitynet
+      name: Hospitality Net
+      url: https://hospitalitynet.org/rss
+      priority: high
+    - id: hotelnewsnow
+      name: Hotel News Now
+      url: https://www.hotelnewsnow.com/rss
+      priority: medium
+    - id: travelweekly
+      name: Travel Weekly
+      url: https://www.travelweekly.com/rss
+      priority: medium
+    - id: traveldaily_cn
+      name: 环球旅讯
+      url: https://www.traveldaily.cn/rss
+      priority: high
+    - id: pinchain
+      name: 品橙旅游
+      url: https://www.pinchain.com/rss
+      priority: medium
+    - id: wenlvnews
+      name: 闻旅
+      url: https://www.wenlvnews.com/rss
+      priority: medium
+
+business_analysis:
+  name: "商业/互联网分析（爆款来源）"
+  sources:
+    - id: huxiu
+      name: 虎嗅
+      url: https://www.huxiu.com/rss/0.xml
+      priority: high
+    - id: kr36
+      name: 36Kr
+      url: https://36kr.com/feed
+      priority: high
+    - id: latepost
+      name: 晚点LatePost
+      url: https://www.latepost.com/rss
+      priority: high
+    - id: yuanchuan
+      name: 远川研究所
+      url: https://www.yuanchuan.cn/feed
+      priority: high
+
+global_insights:
+  name: "全球商业洞察（爆款素材）"
+  sources:
+    - id: hbr
+      name: Harvard Business Review
+      url: https://hbr.org/feed
+      priority: medium
+    - id: mit_tech_review
+      name: MIT Technology Review
+      url: https://www.technologyreview.com/feed/
+      priority: medium
+    - id: economist
+      name: The Economist
+      url: https://www.economist.com/latest/rss.xml
+      priority: medium
+
+management:
+  name: "职场/管理观点（视频号爆款源）"
+  sources:
+    - id: managementtoday
+      name: Management Today
+      url: https://www.managementtoday.co.uk/rss
+      priority: low
+    - id: strategy_business
+      name: Strategy+Business
+      url: https://www.strategy-business.com/rss
+      priority: low
+    - id: fastcompany
+      name: Fast Company
+      url: https://www.fastcompany.com/rss
+      priority: low
+
+hot_news:
+  name: "热点新闻（AI选题来源）"
+  sources:
+    - id: reuters_business
+      name: Reuters Business
+      url: https://www.reuters.com/rssFeed/businessNews
+      priority: high
+    - id: bloomberg
+      name: Bloomberg
+      url: https://www.bloomberg.com/feed/podcast/etf-report.xml
+      priority: medium
+
+wechat_official:
+  name: "公众号（RSSHub转换）"
+  base_url: https://rsshub.app/wechat/official/
+  sources:
+    - id: traveldaily_mp
+      name: 环球旅讯
+      mp_id: "traveldaily"
+      priority: high
+    - id: hotelgaocan
+      name: 酒店高参
+      mp_id: "hotelgaocan"
+      priority: high
+    - id: hotelreview
+      name: 酒店评论
+      mp_id: "hotelreview"
+      priority: medium
+    - id: jiuguancaijing
+      name: 酒管财经
+      mp_id: "jiuguancaijing"
+      priority: medium
+    - id: liurun_mp
+      name: 刘润
+      mp_id: "liurun"
+      priority: high
+    - id: yuanchuan_mp
+      name: 远川研究所
+      mp_id: "yuanchuan"
+      priority: high
+    - id: bijiexia
+      name: 笔记侠
+      mp_id: "bijiexia"
+      priority: medium
+    - id: banfo
+      name: 半佛仙人
+      mp_id: "banfo"
+      priority: low
+    - id: yunyingyanjiushe
+      name: 运营研究社
+      mp_id: "yunyingyanjiushe"
+      priority: low
+    - id: guai-daotuan
+      name: 互联网怪盗团
+      mp_id: "guai-daotuan"
+      priority: low
+
+international_community:
+  name: "国际社区（隐藏信息源）"
+  sources:
+    - id: reddit_travel
+      name: Reddit r/hospitality
+      url: "https://www.reddit.com/r/hospitality.rss"
+      priority: low
+    - id: hackernews
+      name: Hacker News
+      url: "https://news.ycombinator.com/rss"
+      priority: low
+    - id: producthunt
+      name: Product Hunt
+      url: "https://www.producthunt.com/feed"
+      priority: low
+
+---
+# 抓取策略
+fetch_strategy:
+  frequency: "daily"
+  time: "06:00"
+  max_items_per_source: 10
+  total_max_items: 300
+  
+# AI筛选标准
+filter_criteria:
+  relevance_threshold: 0.7
+  novelty_threshold: 0.6
+  actionability_threshold: 0.5
+  
+# 输出目标
+output_targets:
+  daily_digest: true
+  top_10_topics: true
+  selected_articles: 3
+  video_script: 1

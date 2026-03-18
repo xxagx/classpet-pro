@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <!-- Background -->
+  <rect width="800" height="500" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#333">
+    成都地铁线路图（春糖出行指南）
+  </text>
+  
+  <!-- Line 1 - Red -->
+  <line x1="100" y1="250" x2="700" y2="250" stroke="#e74c3c" stroke-width="8"/>
+  <text x="50" y="255" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#e74c3c">1号线</text>
+  
+  <!-- Line 18 - Blue -->
+  <line x1="400" y1="100" x2="400" y2="400" stroke="#3498db" stroke-width="8"/>
+  <text x="410" y="90" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#3498db">18号线</text>
+  
+  <!-- Stations Line 1 -->
+  <circle cx="150" cy="250" r="8" fill="white" stroke="#e74c3c" stroke-width="3"/>
+  <text x="150" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#333">火车南站</text>
+  
+  <circle cx="250" cy="250" r="8" fill="white" stroke="#e74c3c" stroke-width="3"/>
+  <text x="250" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#333">高新站</text>
+  
+  <circle cx="350" cy="250" r="10" fill="#e74c3c"/>
+  <text x="350" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#e74c3c">世纪城</text>
+  <text x="350" y="295" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666">⭐ 核心展区</text>
+  
+  <circle cx="450" cy="250" r="8" fill="white" stroke="#e74c3c" stroke-width="3"/>
+  <text x="450" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#333">天府三街</text>
+  
+  <circle cx="550" cy="250" r="10" fill="#f39c12"/>
+  <text x="550" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#f39c12">西博城</text>
+  <text x="550" y="295" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666">⭐ 核心展区</text>
+  
+  <circle cx="650" cy="250" r="8" fill="white" stroke="#e74c3c" stroke-width="3"/>
+  <text x="650" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#333">天府机场</text>
+  
+  <!-- Stations Line 18 -->
+  <circle cx="400" cy="150" r="8" fill="white" stroke="#3498db" stroke-width="3"/>
+  <text x="430" y="155" font-family="Arial, sans-serif" font-size="11" fill="#333">火车南站</text>
+  
+  <circle cx="400" cy="250" r="8" fill="white" stroke="#3498db" stroke-width="3"/>
+  <text x="430" y="255" font-family="Arial, sans-serif" font-size="11" fill="#333">孵化园</text>
+  
+  <circle cx="400" cy="350" r="10" fill="#3498db"/>
+  <text x="430" y="355" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#3498db">天府新区</text>
+  <text x="430" y="375" font-family="Arial, sans-serif" font-size="10" fill="#666">💰 性价比之选</text>
+  
+  <!-- Transfer station -->
+  <circle cx="400" cy="250" r="12" fill="none" stroke="#333" stroke-width="2"/>
+  <text x="400" y="225" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666">换乘站</text>
+  
+  <!-- Hotel areas -->
+  <rect x="100" y="420" width="600" height="60" fill="white" stroke="#ddd" stroke-width="1" rx="5"/>
+  <text x="120" y="445" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">🏨 酒店区域推荐</text>
+  
+  <circle cx="150" cy="465" r="6" fill="#e74c3c"/>
+  <text x="165" y="470" font-family="Arial, sans-serif" font-size="11" fill="#666">世纪城周边（高端）</text>
+  
+  <circle cx="300" cy="465" r="6" fill="#f39c12"/>
+  <text x="315" y="470" font-family="Arial, sans-serif" font-size="11" fill="#666">金融城（中高端）</text>
+  
+  <circle cx="450" cy="465" r="6" fill="#3498db"/>
+  <text x="465" y="470" font-family="Arial, sans-serif" font-size="11" fill="#666">天府新区（性价比）</text>
+  
+  <circle cx="600" cy="465" r="6" fill="#27ae60"/>
+  <text x="615" y="470" font-family="Arial, sans-serif" font-size="11" fill="#666">双流/龙泉（经济）</text>
+  
+  <!-- Legend -->
+  <rect x="620" y="80" width="160" height="120" fill="white" stroke="#ddd" stroke-width="1" rx="5"/>
+  <text x="630" y="105" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">图例</text>
+  <circle cx="640" cy="130" r="6" fill="#e74c3c"/>
+  <text x="655" y="135" font-family="Arial, sans-serif" font-size="11" fill="#666">核心展区</text>
+  <circle cx="640" cy="155" r="6" fill="#f39c12"/>
+  <text x="655" y="160" font-family="Arial, sans-serif" font-size="11" fill="#666">次级区域</text>
+  <circle cx="640" cy="180" r="6" fill="#27ae60"/>
+  <text x="655" y="185" font-family="Arial, sans-serif" font-size="11" fill="#666">外围区域</text>
+</svg>

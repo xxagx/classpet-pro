@@ -1,0 +1,127 @@
+{
+  "date": "2026-03-07",
+  "summary": "今日热点聚焦：趋势预测、新技术突破、市场数据。",
+  "selected_topics": [
+    {
+      "rank": 1,
+      "title": "途牛四季度净收入同比增长超20%，全年净利润2970万",
+      "source": "品橙旅游",
+      "score": 40,
+      "potential": "高",
+      "tags": [
+        "商业机会",
+        "市场数据"
+      ],
+      "link": "https://www.pinchain.com/article/343732"
+    },
+    {
+      "rank": 2,
+      "title": "同程旅行版“女子图鉴”:60后70后奶奶团“勇闯世界”",
+      "source": "品橙旅游",
+      "score": 35,
+      "potential": "高",
+      "tags": [
+        "新技术突破",
+        "市场数据",
+        "趋势预测"
+      ],
+      "link": "https://www.pinchain.com/article/343737"
+    },
+    {
+      "rank": 3,
+      "title": "吉利智能辅助驾驶整合后，首访掌舵人陈奇",
+      "source": "虎嗅",
+      "score": 35,
+      "potential": "高",
+      "tags": [
+        "新技术突破",
+        "趋势预测"
+      ],
+      "link": "http://www.huxiu.com/article/4839192.html?f=wangzhan"
+    },
+    {
+      "rank": 4,
+      "title": "全网狂吹，永久投资组合，能持续赚吗?",
+      "source": "虎嗅",
+      "score": 35,
+      "potential": "高",
+      "tags": [
+        "新技术突破",
+        "趋势预测"
+      ],
+      "link": "http://www.huxiu.com/article/4837439.html?f=wangzhan"
+    },
+    {
+      "rank": 5,
+      "title": "氪星晚报｜谷歌DeepMind向千问团队抛橄榄枝；韩国总统下令实施100万亿韩元资本市场稳定计划；默沙东回应美国疫苗工厂裁员",
+      "source": "36氪",
+      "score": 30,
+      "potential": "高",
+      "tags": [
+        "新技术突破",
+        "市场数据"
+      ],
+      "link": "https://36kr.com/p/3709831706374531?f=rss"
+    },
+    {
+      "rank": 6,
+      "title": "去哪儿旅行：过去一年，独自入住酒店的女性增63%",
+      "source": "品橙旅游",
+      "score": 25,
+      "potential": "中",
+      "tags": [
+        "市场数据",
+        "趋势预测"
+      ],
+      "link": "https://www.pinchain.com/article/343734"
+    },
+    {
+      "rank": 7,
+      "title": "阿里不希望任何人上“神坛”？",
+      "source": "虎嗅",
+      "score": 25,
+      "potential": "中",
+      "tags": [
+        "新技术突破",
+        "趋势预测"
+      ],
+      "link": "http://www.huxiu.com/article/4839506.html?f=wangzhan"
+    },
+    {
+      "rank": 8,
+      "title": "史上最忙AI春节档：海量新品，如何才能不焦虑？",
+      "source": "虎嗅",
+      "score": 25,
+      "potential": "中",
+      "tags": [
+        "新技术突破",
+        "趋势预测"
+      ],
+      "link": "http://www.huxiu.com/article/4837484.html?f=wangzhan"
+    },
+    {
+      "rank": 9,
+      "title": "9点1氪丨贾国龙卸任西贝CEO；字节跳动启动最大规模转正实习生招聘；OpenClaw爆火，程序员上门安装收费500元",
+      "source": "36氪",
+      "score": 25,
+      "potential": "中",
+      "tags": [
+        "市场数据",
+        "趋势预测"
+      ],
+      "link": "https://36kr.com/p/3712170172264838?f=rss"
+    },
+    {
+      "rank": 10,
+      "title": "倒计时10天，2026 AI最佳场景渗透案例火热征集中",
+      "source": "36氪",
+      "score": 25,
+      "potential": "中",
+      "tags": [
+        "新技术突破",
+        "趋势预测"
+      ],
+      "link": "https://36kr.com/p/3711294378930306?f=rss"
+    }
+  ]
+}

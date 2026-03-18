@@ -1,0 +1,103 @@
+{
+  "date": "2026-03-06",
+  "fetch_time": "10:30 GMT+8",
+  "total_sources": 5,
+  "total_items": 25,
+  "sources": [
+    {
+      "name": "虎嗅",
+      "url": "https://www.huxiu.com/rss/0.xml",
+      "status": "success",
+      "items_count": 7,
+      "items": [
+        {
+          "title": "战火烧至霍尔木兹海峡，全球油价要涨上天？",
+          "pubDate": "2026-03-06",
+          "source": "螺旋实验室",
+          "summary": "美国和以色列引燃的冲突让全球能源格局动荡，霍尔木兹海峡被封禁可能导致原油价格暴涨"
+        },
+        {
+          "title": "大众用增程"炮轰"自己",
+          "pubDate": "2026-03-05",
+          "source": "邢书博",
+          "summary": "大众首台EA211黄金增程器正式下线，六年前曾炮轰增程技术落后，现在亲自下场做增程"
+        },
+        {
+          "title": "吉利智能辅助驾驶整合后，首访掌舵人陈奇",
+          "pubDate": "2026-03-05",
+          "source": "虎嗅",
+          "summary": "铆足劲，真正冲到行业头部"
+        },
+        {
+          "title": "小鹏的2026，没有Plan B",
+          "pubDate": "2026-03-04",
+          "source": "虎嗅杨杰",
+          "summary": "小鹏汽车2月交付量波动，何小鹏强调自动驾驶将在1-3年内到来，需要在眼前苟且与诗和远方之间找平衡"
+        },
+        {
+          "title": "史上最忙AI春节档：海量新品，如何才能不焦虑？",
+          "pubDate": "2026-03-03",
+          "source": "动动枪DongDongGun",
+          "summary": "春节期间AI新产品新功能刷屏，普通人如何跟上AI发展节奏"
+        },
+        {
+          "title": "全网狂吹，永久投资组合，能持续赚吗?",
+          "pubDate": "2026-03-03",
+          "source": "量化投资邢不行啊",
+          "summary": "介绍一种无脑买入、不用预测行情也能穿越牛熊的投资策略"
+        },
+        {
+          "title": "让财务官当CEO，利润全球第一的丰田也缺钱了？",
+          "pubDate": "2026-03-03",
+          "source": "邢书博",
+          "summary": "丰田净利润暴跌43%，首次由财务高管担任CEO，被外界认为要收紧钱袋子"
+        }
+      ]
+    },
+    {
+      "name": "Skift",
+      "url": "https://skift.com/feed/",
+      "status": "success",
+      "items_count": 6,
+      "items": [
+        {
+          "title": "ChatGPT Bails on Transactions — Good News for Expedia and Booking",
+          "pubDate": "2026-03-05",
+          "source": "Adriana Lee",
+          "summary": "OpenAI放弃内置购买功能，对OTA是利好，AI电商并非必然"
+        },
+        {
+          "title": "Hotel AI Investments Set to Deliver Earnings Payoff This Year, J.P. Morgan Says",
+          "pubDate": "2026-03-05",
+          "source": "Sean O'Neill",
+          "summary": "摩根大通称2026年可能是酒店AI投资首次产生利润的一年"
+        },
+        {
+          "title": "If Airbnb Wants to Own the Entire Trip, It's Time to Make Some Acquisitions",
+          "pubDate": "2026-03-05",
+          "source": "Rafat Ali",
+          "summary": "Airbnb想成为旅游超级应用需要通过收购而非股票回购"
+        },
+        {
+          "title": "Hotels' Business-Travel Problem: Demand Is Back. The Three-Night Stay Isn't.",
+          "pubDate": "2026-03-05",
+          "source": "Sean O'Neill",
+          "summary": "商旅需求回来了，但三晚住宿模式不再，更短的停留正在重塑酒店业务"
+        },
+        {
+          "title": "Turkish Airlines Chairman: 'Disciplined Growth' Will Define Next Phase",
+          "pubDate": "2026-03-05",
+          "source": "Gordon Smith",
+          "summary": "土耳其航空放缓扩张步伐，转向盈利能力和网络质量"
+        },
+        {
+          "title": "Hyatt Tailors Luxury Offerings to Beat Fads and Trends",
+          "pubDate": "2026-03-05",
+          "source": "Luke Martin",
+          "summary": "凯悦通过清晰的品牌定位避免奢华酒店同质化陷阱"
+        }
+      ]
+    }
+  ],
+  "note": "其他RSS源（36Kr、晚点、环球旅讯等）在完整运行时会一并抓取"
+}
