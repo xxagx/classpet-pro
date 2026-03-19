@@ -3,6 +3,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     // 初始化数据管理器
     const dataManager = new DataManager();
+    
+    // 初始化积分与宠物状态管理器
+    const scorePetManager = new ScorePetManager(dataManager);
+    
     let currentStudent = null;
 
     // DOM元素
@@ -201,6 +205,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function updatePetDisplay() {
         if (!currentStudent) return;
 
+        // 使用 ScorePetManager 获取完整信息
+        const fullInfo = scorePetManager.getStudentFullInfo(currentStudent.id);
+        if (fullInfo) {
+            currentStudent = fullInfo.student;
+        }
+
         const petInfo = getPetInfo(currentStudent);
         const petDisplay = getPetDisplay(currentStudent);
 
@@ -212,12 +222,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const petEmoji = document.getElementById('petEmoji');
         const petStage = document.getElementById('petStage');
 
-        if (petInfo) {
+        // 应用饥饿状态样式
+        if (currentStudent.pet && currentStudent.pet.statusClass) {
+            imageContainer.className = `pet-image-container ${currentStudent.pet.statusClass}`;
+        } else if (petInfo) {
             petStage.textContent = petInfo.stageName;
             imageContainer.className = `pet-image-container ${petInfo.bgClass}`;
         } else {
             petStage.textContent = '蛋';
             imageContainer.className = 'pet-image-container stage-egg';
+        }
+
+        if (petInfo) {
+            petStage.textContent = petInfo.stageName;
         }
 
         if (petDisplay.image) {
@@ -230,6 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnAdopt.style.display = petInfo ? 'none' : 'block';
 
         updatePetStatusPanel();
+        updateHungerStatusPanel();
     }
 
     // 更新宠物状态面板
@@ -648,6 +666,105 @@ document.addEventListener('DOMContentLoaded', () => {
             updatePetDisplay();
         }
     });
+
+    // 更新饥饿状态面板
+    function updateHungerStatusPanel() {
+        if (!currentStudent) return;
+
+        const hungerPanel = document.getElementById('hungerStatusPanel');
+        if (!hungerPanel) {
+            createHungerStatusPanel();
+            return;
+        }
+
+        const pet = currentStudent.pet;
+        if (!pet) {
+            hungerPanel.style.display = 'none';
+            return;
+        }
+
+        hungerPanel.style.display = 'block';
+
+        const statusTag = hungerPanel.querySelector('.hunger-status-tag');
+        const daysText = hungerPanel.querySelector('.hunger-days span');
+        const deadNotice = hungerPanel.querySelector('.pet-dead-notice');
+        const reviveBtn = hungerPanel.querySelector('.btn-revive');
+
+        if (statusTag) {
+            const status = pet.hungerStatus || 'healthy';
+            statusTag.className = `hunger-status-tag ${status}`;
+            statusTag.innerHTML = `<span>${pet.hungerText || '活力满满 😊'}</span>`;
+        }
+
+        if (daysText) {
+            daysText.textContent = currentStudent.consecutiveDaysWithoutScore || 0;
+        }
+
+        // 显示/隐藏死亡提示
+        if (deadNotice) {
+            if (pet.isAdopted === false) {
+                deadNotice.style.display = 'block';
+                if (reviveBtn) {
+                    reviveBtn.disabled = currentStudent.score < 50;
+                }
+            } else {
+                deadNotice.style.display = 'none';
+            }
+        }
+    }
+
+    // 创建饥饿状态面板
+    function createHungerStatusPanel() {
+        const petMain = document.querySelector('.pet-main');
+        if (!petMain) return;
+
+        const panel = document.createElement('div');
+        panel.id = 'hungerStatusPanel';
+        panel.className = 'hunger-panel';
+        panel.innerHTML = `
+            <div class="hunger-panel-header">
+                <span class="hunger-panel-title">🍖 宠物状态</span>
+                <span class="hunger-days">已 <span>0</span> 天未加分</span>
+            </div>
+            <div style="text-align: center;">
+                <span class="hunger-status-tag healthy">
+                    <span>活力满满 😊</span>
+                </span>
+            </div>
+            <div class="pet-dead-notice" style="display: none;">
+                <div class="notice-icon">💀</div>
+                <div class="notice-text">你的宠物已经饿晕了！</div>
+                <div class="revive-cost">需要 50 积分复活宠物</div>
+                <button class="btn-revive">复活宠物 (50分)</button>
+            </div>
+        `;
+
+        petMain.insertBefore(panel, petMain.querySelector('.pet-status-panel'));
+
+        // 绑定复活按钮事件
+        const reviveBtn = panel.querySelector('.btn-revive');
+        if (reviveBtn) {
+            reviveBtn.addEventListener('click', () => {
+                if (!currentStudent) return;
+                
+                if (currentStudent.score < 50) {
+                    showAlert('积分不足！需要 50 分复活宠物', '提示');
+                    return;
+                }
+
+                if (confirm('确定花费 50 分复活宠物吗？')) {
+                    const result = scorePetManager.revivePet(currentStudent.id);
+                    if (result.success) {
+                        currentStudent = result.student;
+                        updatePetDisplay();
+                        showAlert('宠物已复活！', '成功');
+                    } else {
+                        showAlert(result.error, '错误');
+                    }
+                }
+            });
+        }
+    }
 
     // 初始化
     initMusic();

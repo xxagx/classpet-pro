@@ -774,3 +774,186 @@ body {
     .welcome-content { padding: 60px 30px; }
     .welcome-logo { font-size: 120px; }
 }
+
+/* ==================== 饥饿状态样式 ==================== */
+
+.pet-healthy {
+    background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+    color: white;
+}
+
+.pet-healthy .pet-emoji {
+    animation: bounce 1s infinite;
+}
+
+.pet-hungry {
+    background: linear-gradient(135deg, #FF9800 0%, #FFC107 100%);
+    color: white;
+}
+
+.pet-hungry .pet-emoji {
+    animation: shake 0.5s infinite;
+}
+
+.pet-dizzy {
+    background: linear-gradient(135deg, #FF5722 0%, #FF9800 100%);
+    color: white;
+}
+
+.pet-dizzy .pet-emoji {
+    animation: wobble 0.5s infinite;
+}
+
+.pet-dying {
+    background: linear-gradient(135deg, #f44336 0%, #FF5722 100%);
+    color: white;
+}
+
+.pet-dying .pet-emoji {
+    animation: fadeOut 1s infinite;
+}
+
+.pet-dead {
+    background: linear-gradient(135deg, #9E9E9E 0%, #757575 100%);
+    color: white;
+    opacity: 0.7;
+}
+
+.pet-dead .pet-emoji {
+    filter: grayscale(100%);
+    animation: none;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+@keyframes wobble {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg); }
+    75% { transform: rotate(5deg); }
+}
+
+@keyframes fadeOut {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* 饥饿状态标签 */
+.hunger-status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.hunger-status-tag.healthy {
+    background: rgba(76, 175, 80, 0.15);
+    color: #4CAF50;
+}
+
+.hunger-status-tag.hungry {
+    background: rgba(255, 152, 0, 0.15);
+    color: #FF9800;
+}
+
+.hunger-status-tag.dizzy {
+    background: rgba(255, 87, 34, 0.15);
+    color: #FF5722;
+}
+
+.hunger-status-tag.dying {
+    background: rgba(244, 67, 54, 0.15);
+    color: #f44336;
+}
+
+.hunger-status-tag.dead {
+    background: rgba(158, 158, 158, 0.15);
+    color: #757575;
+}
+
+/* 饥饿状态面板 */
+.hunger-panel {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.hunger-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.hunger-panel-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.hunger-days {
+    font-size: 14px;
+    color: #666;
+}
+
+.hunger-days span {
+    font-weight: 600;
+    color: #667eea;
+}
+
+/* 宠物复活按钮 */
+.btn-revive {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    background: linear-gradient(135deg, #f44336 0%, #E91E63 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: all 0.2s;
+}
+
+.btn-revive:active {
+    transform: scale(0.98);
+}
+
+.btn-revive:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 死亡宠物提示 */
+.pet-dead-notice {
+    text-align: center;
+    padding: 20px;
+    background: #fff3f3;
+    border-radius: 12px;
+    margin-top: 15px;
+}
+
+.pet-dead-notice .notice-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.pet-dead-notice .notice-text {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.pet-dead-notice .revive-cost {
+    font-size: 12px;
+    color: #999;
+}
