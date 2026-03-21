@@ -1,0 +1,544 @@
+/* ClassPet Pro - 教师端作业发布增强样式 */
+
+/* 表单分区 */
+.form-section {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #e0e0e0;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #667eea;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.section-title .toggle-icon {
+    font-size: 12px;
+    transition: transform 0.3s;
+}
+
+.form-section.collapsible .section-title:hover {
+    background: #f8f9fa;
+}
+
+/* 必填标记 */
+.required {
+    color: #f44336;
+    margin-left: 2px;
+}
+
+/* 输入提示 */
+.input-hint {
+    font-size: 12px;
+    color: #999;
+    margin-top: 4px;
+}
+
+/* 快捷时间按钮 */
+.quick-time-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.quick-time-btn {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.quick-time-btn:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+/* 作业要求编辑器 */
+.requirements-editor {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.requirements-list {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 12px;
+    background: #f8f9fa;
+    min-height: 60px;
+}
+
+.no-requirements {
+    text-align: center;
+    color: #999;
+    font-size: 13px;
+    padding: 20px 0;
+}
+
+.requirement-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: white;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    border: 1px solid #e0e0e0;
+    transition: all 0.2s;
+}
+
+.requirement-item:hover {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.requirement-item:last-child {
+    margin-bottom: 0;
+}
+
+.requirement-number {
+    font-weight: 600;
+    color: #667eea;
+    margin-right: 8px;
+    min-width: 20px;
+}
+
+.requirement-text {
+    flex: 1;
+    font-size: 14px;
+    color: #333;
+}
+
+.btn-remove-requirement {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    color: #999;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-remove-requirement:hover {
+    background: #f44336;
+    color: white;
+}
+
+.requirement-input {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    border-top: 1px solid #e0e0e0;
+    background: white;
+}
+
+.requirement-input input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.requirement-input input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+.btn-add-requirement {
+    padding: 10px 16px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.btn-add-requirement:hover {
+    background: #5568d3;
+}
+
+/* 分类选择器 */
+.category-selector {
+    margin-top: 8px;
+}
+
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.category-header h4 {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.btn-add-category {
+    padding: 6px 12px;
+    background: white;
+    border: 1px solid #667eea;
+    color: #667eea;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-add-category:hover {
+    background: #667eea;
+    color: white;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+}
+
+.category-item {
+    position: relative;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+}
+
+.category-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.category-item.selected {
+    background: #f0f4ff;
+    border-width: 2px;
+}
+
+.category-icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+
+.category-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+}
+
+.btn-delete-category {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 18px;
+    height: 18px;
+    border: none;
+    background: #f44336;
+    color: white;
+    border-radius: 50%;
+    font-size: 10px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.category-item:hover .btn-delete-category {
+    opacity: 1;
+}
+
+/* 图标选择器 */
+.icon-selector {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 6px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.icon-btn:hover {
+    border-color: #667eea;
+    background: #f0f4ff;
+}
+
+.icon-btn.selected {
+    background: #667eea;
+    border-color: #667eea;
+}
+
+/* 预览增强样式 */
+.preview-homework {
+    padding: 20px;
+}
+
+.preview-homework h4 {
+    font-size: 20px;
+    margin-bottom: 16px;
+    color: #333;
+}
+
+.preview-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.preview-meta span {
+    padding: 4px 12px;
+    background: white;
+    border-radius: 4px;
+    font-size: 13px;
+    border: 1px solid #e0e0e0;
+}
+
+.preview-description {
+    margin-bottom: 16px;
+    padding: 16px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    line-height: 1.6;
+}
+
+.preview-requirements {
+    margin-bottom: 16px;
+    padding: 16px;
+    background: #fff9e6;
+    border-radius: 8px;
+    border-left: 4px solid #ff9800;
+}
+
+.preview-requirements h5 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.preview-requirements ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.preview-requirements li {
+    margin-bottom: 6px;
+    color: #666;
+}
+
+.preview-attachments {
+    margin-bottom: 16px;
+    padding: 16px;
+    background: #f0f4ff;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.preview-attachments h5 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.attachment-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.attachment-item {
+    padding: 8px 12px;
+    background: white;
+    border-radius: 6px;
+    font-size: 13px;
+    border: 1px solid #e0e0e0;
+}
+
+.preview-settings {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 12px;
+    background: #e8f5e9;
+    border-radius: 8px;
+}
+
+.preview-settings span {
+    font-size: 13px;
+    color: #4caf50;
+}
+
+/* 附件上传区域 */
+.attachment-upload {
+    min-height: 100px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .form-section {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+    
+    .section-title {
+        font-size: 15px;
+    }
+    
+    .quick-time-buttons {
+        gap: 6px;
+    }
+    
+    .quick-time-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .category-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 6px;
+    }
+    
+    .category-item {
+        padding: 10px 8px;
+    }
+    
+    .category-icon {
+        font-size: 20px;
+    }
+    
+    .category-name {
+        font-size: 11px;
+    }
+    
+    .icon-selector {
+        grid-template-columns: repeat(6, 1fr);
+    }
+    
+    .icon-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
+    
+    .requirement-input {
+        flex-direction: column;
+    }
+    
+    .btn-add-requirement {
+        width: 100%;
+    }
+}
+
+/* 滚动条样式 */
+.requirements-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.requirements-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.requirements-list::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+.requirements-list::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* 动画效果 */
+.category-item {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 表单操作按钮增强 */
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.form-actions .btn-secondary {
+    padding: 10px 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.form-actions .btn-secondary:hover {
+    background: #f8f9fa;
+    border-color: #999;
+}
+
+.form-actions .btn-primary {
+    padding: 10px 24px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.form-actions .btn-primary:hover {
+    background: #5568d3;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>按钮点击测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-result {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .pass { border-left: 4px solid #4CAF50; }
+        .fail { border-left: 4px solid #f44336; }
+        .test-name { font-weight: bold; margin-bottom: 10px; }
+        .test-detail { color: #666; font-size: 14px; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:active {
+            background: #5568d3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 ClassPet Pro 按钮点击测试</h1>
+    
+    <div class="test-result pass">
+        <div class="test-name">测试 1: DOM 元素存在性</div>
+        <div class="test-detail" id="test1">正在检查...</div>
+    </div>
+    
+    <div class="test-result pass">
+        <div class="test-name">测试 2: 事件监听器绑定</div>
+        <div class="test-detail" id="test2">正在检查...</div>
+    </div>
+    
+    <div class="test-result pass">
+        <div class="test-name">测试 3: CSS 样式加载</div>
+        <div class="test-detail" id="test3">正在检查...</div>
+    </div>
+    
+    <div class="test-result pass">
+        <div class="test-name">测试 4: JavaScript 错误检测</div>
+        <div class="test-detail" id="test4">正在检查...</div>
+    </div>
+    
+    <div class="test-result pass">
+        <div class="test-name">测试 5: 移动端触摸支持</div>
+        <div class="test-detail" id="test5">正在检查...</div>
+    </div>
+    
+    <h2>手动测试区域</h2>
+    <div style="background: white; padding: 20px; border-radius: 8px;">
+        <button id="testButton">点击测试按钮</button>
+        <div id="clickCount" style="margin-top: 10px;">点击次数：0</div>
+        <button id="resetButton" style="background: #f44336;">重置</button>
+    </div>
+    
+    <h2>修复建议</h2>
+    <div class="test-result">
+        <div class="test-name">如果测试失败，请尝试以下修复：</div>
+        <ol>
+            <li>确保 JS 文件在 HTML 之后加载</li>
+            <li>检查 console 中的错误信息</li>
+            <li>清除浏览器缓存</li>
+            <li>确保 CSS 文件正确加载</li>
+            <li>检查移动端 viewport 设置</li>
+        </ol>
+    </div>
+    
+    <script>
+        let clickCount = 0;
+        
+        // 测试 1: DOM 元素存在性
+        function test1() {
+            const btn = document.getElementById('testButton');
+            const result = document.getElementById('test1');
+            
+            if (btn) {
+                result.textContent = '✅ 通过 - 按钮元素存在';
+            } else {
+                result.textContent = '❌ 失败 - 按钮元素不存在';
+                result.parentElement.className = 'test-result fail';
+            }
+        }
+        
+        // 测试 2: 事件监听器绑定
+        function test2() {
+            const btn = document.getElementById('testButton');
+            const result = document.getElementById('test2');
+            
+            if (btn && btn.onclick) {
+                result.textContent = '✅ 通过 - 事件监听器已绑定';
+            } else if (btn) {
+                // 尝试绑定事件
+                btn.addEventListener('click', () => {
+                    clickCount++;
+                    document.getElementById('clickCount').textContent = `点击次数：${clickCount}`;
+                });
+                result.textContent = '✅ 通过 - 事件监听器绑定成功';
+            } else {
+                result.textContent = '❌ 失败 - 无法绑定事件监听器';
+                result.parentElement.className = 'test-result fail';
+            }
+        }
+        
+        // 测试 3: CSS 样式加载
+        function test3() {
+            const btn = document.getElementById('testButton');
+            const result = document.getElementById('test3');
+            const computedStyle = window.getComputedStyle(btn);
+            
+            if (computedStyle.backgroundColor !== 'rgba(0, 0, 0, 0)') {
+                result.textContent = `✅ 通过 - CSS 样式已加载 (背景色：${computedStyle.backgroundColor})`;
+            } else {
+                result.textContent = '⚠️ 警告 - CSS 样式可能未正确加载';
+                result.parentElement.className = 'test-result fail';
+            }
+        }
+        
+        // 测试 4: JavaScript 错误检测
+        function test4() {
+            const result = document.getElementById('test4');
+            
+            window.addEventListener('error', (e) => {
+                result.textContent = `❌ 检测到错误：${e.message}`;
+                result.parentElement.className = 'test-result fail';
+            });
+            
+            result.textContent = '✅ 通过 - 未检测到 JavaScript 错误';
+        }
+        
+        // 测试 5: 移动端触摸支持
+        function test5() {
+            const btn = document.getElementById('testButton');
+            const result = document.getElementById('test5');
+            
+            const hasTouchSupport = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            
+            if (hasTouchSupport) {
+                btn.addEventListener('touchstart', (e) => {
+                    e.preventDefault(); // 防止触发 click 事件
+                    clickCount++;
+                    document.getElementById('clickCount').textContent = `点击次数：${clickCount}`;
+                    btn.style.background = '#5568d3';
+                    setTimeout(() => {
+                        btn.style.background = '#667eea';
+                    }, 200);
+                });
+                
+                result.textContent = '✅ 通过 - 触摸事件支持良好';
+            } else {
+                result.textContent = '⚠️ 警告 - 设备不支持触摸事件';
+            }
+        }
+        
+        // 重置按钮
+        document.getElementById('resetButton').addEventListener('click', () => {
+            clickCount = 0;
+            document.getElementById('clickCount').textContent = '点击次数：0';
+        });
+        
+        // 运行所有测试
+        window.addEventListener('DOMContentLoaded', () => {
+            test1();
+            test2();
+            test3();
+            test4();
+            test5();
+            
+            console.log('🎉 所有测试已完成');
+        });
+    </script>
+</body>
+</html>

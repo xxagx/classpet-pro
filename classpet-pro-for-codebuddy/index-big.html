@@ -3,17 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ClassPet Pro - 班级宠物养成 (v4)</title>
+    <title>ClassPet Pro - 班级宠物养成 (v4) - Think-AI 俱乐部---贝贝老师</title>
     <link rel="stylesheet" href="assets/css/style.css?v=14">
     <link rel="stylesheet" href="assets/css/pet-adoption.css?v=2">
-    <script>console.log('ClassPet Pro v1.1.5 - 2026-03-12 - 班级名称更新为二年级一班');</script>
+    <script>console.log('ClassPet Pro v1.1.5 - 2026-03-12 - 班级名称更新为二年级一班 - Think-AI 俱乐部---贝贝老师');</script>
+    <style>
+        /* 添加 Think-AI 俱乐部标识 */
+        .think-ai-branding {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            z-index: 1000;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+            }
+        }
+        
+        .header-branding {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+    </style>
 </head>
 <body>
+    <!-- Think-AI 俱乐部标识 -->
+    <div class="header-branding">
+        🚀 Think-AI 俱乐部 --- 贝贝老师荣誉出品 🚀
+    </div>
+
     <!-- 欢迎弹窗 -->
     <div class="modal active" id="welcomeModal" style="z-index: 9999;">
         <div class="modal-content" style="text-align: center; padding: 40px;">
             <h1 style="font-size: 32px; margin-bottom: 20px;">🎉 欢迎来到宠物乐园</h1>
             <p id="welcomeClassName" style="font-size: 18px; color: #666; margin-bottom: 30px;">加载中...</p>
+            <p style="font-size: 14px; color: #999; margin-bottom: 20px;">Think-AI 俱乐部 --- 贝贝老师</p>
             <button class="btn-primary" id="btnEnter" style="font-size: 20px; padding: 15px 40px;">进入乐园 🚀</button>
         </div>
     </div>
@@ -26,13 +70,13 @@
                 <button class="btn-style" id="btnAdoption">🏠 宠物认养</button>
                 <button class="btn-style" id="btnMusic" title="开关背景音乐">🎵 音乐</button>
                 <button class="btn-style" id="btnUploadMusic" title="自定义音乐">🎵 换音乐</button>
-                <button class="btn-teacher" id="btnTeacher">👨‍🏫 教师模式</button>
+                <button class="btn-teacher" id="btnTeacher">👨‍ 教师模式</button>
             </div>
         </header>
 
         <!-- 宠物展示区 -->
         <main class="pet-grid" id="petGrid">
-            <!-- 动态生成40个宠物卡片 -->
+            <!-- 动态生成 40 个宠物卡片 -->
         </main>
 
         <!-- 学生详情弹窗 -->
@@ -179,7 +223,7 @@
             <div class="my-pet-info">
                 <h3>当前宠物</h3>
                 <div class="current-pet-card" id="currentPetCard"></div>
-                <p class="my-pet-stats">积分: <span id="myScore">0</span></p>
+                <p class="my-pet-stats">积分：<span id="myScore">0</span></p>
             </div>
 
             <!-- 筛选 -->
@@ -251,7 +295,7 @@
                 <div class="upload-placeholder" id="musicUploadPlaceholder">
                     <span>🎵</span>
                     <p>点击或拖拽上传音乐文件</p>
-                    <p class="hint">支持 MP3、WAV、OGG格式，最大10MB</p>
+                    <p class="hint">支持 MP3、WAV、OGG 格式，最大 10MB</p>
                 </div>
                 <input type="file" id="musicInput" accept="audio/*" hidden>
             </div>
@@ -264,6 +308,11 @@
         </div>
     </div>
 
+    <!-- Think-AI 俱乐部固定标识 -->
+    <div class="think-ai-branding" id="thinkAiBranding">
+        🤖 Think-AI 俱乐部 | 贝贝老师
+    </div>
+
     <script src="js/data-manager.js"></script>
     <script src="js/pets.js"></script>
     <script src="js/audio.js?v=3"></script>
@@ -274,5 +323,16 @@
     <script src="js/pet-display.js"></script>
     <script src="js/pet-custom-image.js"></script>
     <script src="js/app.js?v=2"></script>
+    <script>
+        // 添加 Think-AI 俱乐部标识动态效果
+        setTimeout(() => {
+            const branding = document.getElementById('thinkAiBranding');
+            if (branding) {
+                branding.addEventListener('click', () => {
+                    alert('🚀 Think-AI 俱乐部 --- 贝贝老师荣誉出品\n\nClassPet Pro 班级宠物养成系统');
+                });
+            }
+        }, 1000);
+    </script>
 </body>
 </html>

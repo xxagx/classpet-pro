@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>配饰商城 - ClassPet Pro - Think-AI 俱乐部---贝贝老师</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/accessory-system.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            color: #FFD700;
+            text-shadow: 0 0 20px #FFD700;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .navigation {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            border-radius: 15px;
+            color: #1e3c72;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .nav-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255,215,0,0.4);
+        }
+        
+        .nav-btn.active {
+            background: linear-gradient(135deg, #4CAF50, #45A049);
+        }
+        
+        .main-content {
+            min-height: 500px;
+        }
+        
+        .branding {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(255,105,180,0.2), rgba(255,20,147,0.2));
+            border-radius: 15px;
+            border: 2px solid rgba(255,105,180,0.3);
+        }
+        
+        .branding-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FF69B4;
+            text-shadow: 0 0 10px #FF69B4;
+        }
+        
+        .student-selector {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .student-selector select {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            margin-left: 10px;
+        }
+        
+        .student-selector select option {
+            background: #1e3c72;
+            color: white;
+        }
+        
+        .add-points-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #4CAF50, #45A049);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛍️ 配饰商城系统</h1>
+            <p>🚀 Think-AI 俱乐部 --- 贝贝老师荣誉出品 🚀</p>
+        </div>
+        
+        <!-- 学生选择器 -->
+        <div class="student-selector">
+            <label>选择学生：</label>
+            <select id="studentSelect" onchange="switchStudent()">
+                <option value="">-- 选择学生 --</option>
+            </select>
+            <button class="add-points-btn" onclick="addTestPoints()">+ 添加测试积分</button>
+            <div id="currentPoints" style="margin-top: 15px; font-size: 18px; color: #FFD700;"></div>
+        </div>
+        
+        <!-- 导航按钮 -->
+        <div class="navigation">
+            <button class="nav-btn active" onclick="showTab('mall')">🛒 商城</button>
+            <button class="nav-btn" onclick="showTab('inventory')">🎒 我的配饰库</button>
+            <button class="nav-btn" onclick="showTab('history')">📊 积分记录</button>
+        </div>
+        
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <div id="mallTab"></div>
+            <div id="inventoryTab" style="display: none;"></div>
+            <div id="historyTab" style="display: none;"></div>
+        </div>
+        
+        <!-- 品牌标识 -->
+        <div class="branding">
+            <div class="branding-text">
+                🤖 Think-AI 俱乐部 | 贝贝老师
+            </div>
+            <p style="margin-top: 10px; opacity: 0.8;">
+                ClassPet Pro 配饰商城系统 - 积分兑换配饰
+            </p>
+        </div>
+    </div>
+    
+    <script src="js/data-manager.js"></script>
+    <script src="js/accessory-mall.js"></script>
+    <script src="js/user-accessory-manager.js"></script>
+    
+    <script>
+        let currentStudentId = null;
+        let userAccessoryManager = null;
+        let mallManager = new AccessoryMallManager();
+        
+        // 初始化
+        function init() {
+            loadStudents();
+        }
+        
+        // 加载学生列表
+        function loadStudents() {
+            const dataManager = new DataManager();
+            const students = dataManager.getAllStudents();
+            const select = document.getElementById('studentSelect');
+            
+            select.innerHTML = '<option value="">-- 选择学生 --</option>';
+            
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = `${student.name} (${student.score}分)`;
+                select.appendChild(option);
+            });
+        }
+        
+        // 切换学生
+        function switchStudent() {
+            const select = document.getElementById('studentSelect');
+            currentStudentId = select.value;
+            
+            if (!currentStudentId) {
+                userAccessoryManager = null;
+                document.getElementById('currentPoints').textContent = '';
+                return;
+            }
+            
+            // 创建用户配饰管理器
+            userAccessoryManager = new UserAccessoryManager(parseInt(currentStudentId));
+            
+            // 同步积分（从学生数据）
+            const dataManager = new DataManager();
+            const student = dataManager.getStudentById(parseInt(currentStudentId));
+            if (student) {
+                userAccessoryManager.updatePoints(student.score);
+            }
+            
+            // 显示当前积分
+            document.getElementById('currentPoints').textContent = 
+                `💰 当前积分：${userAccessoryManager.getPoints()}`;
+            
+            // 刷新当前标签页
+            const activeTab = document.querySelector('.nav-btn.active');
+            if (activeTab.textContent.includes('商城')) {
+                showTab('mall');
+            } else if (activeTab.textContent.includes('配饰库')) {
+                showTab('inventory');
+            } else {
+                showTab('history');
+            }
+        }
+        
+        // 添加测试积分
+        function addTestPoints() {
+            if (!userAccessoryManager) {
+                alert('请先选择学生！');
+                return;
+            }
+            
+            userAccessoryManager.addPoints(500, '测试奖励', '系统赠送测试积分');
+            document.getElementById('currentPoints').textContent = 
+                `💰 当前积分：${userAccessoryManager.getPoints()}`;
+            
+            // 同步到学生数据
+            const dataManager = new DataManager();
+            const student = dataManager.getStudentById(parseInt(currentStudentId));
+            if (student) {
+                student.score = userAccessoryManager.getPoints();
+                dataManager.saveStudents();
+            }
+            
+            alert('已添加 500 测试积分！');
+            
+            // 刷新当前标签页
+            const activeTab = document.querySelector('.nav-btn.active');
+            if (activeTab.textContent.includes('商城')) {
+                showTab('mall');
+            } else if (activeTab.textContent.includes('配饰库')) {
+                showTab('inventory');
+            }
+        }
+        
+        // 显示标签页
+        function showTab(tabName) {
+            // 隐藏所有标签页
+            document.getElementById('mallTab').style.display = 'none';
+            document.getElementById('inventoryTab').style.display = 'none';
+            document.getElementById('historyTab').style.display = 'none';
+            
+            // 更新导航按钮状态
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            if (!userAccessoryManager) {
+                alert('请先选择学生！');
+                return;
+            }
+            
+            // 显示选中的标签页
+            if (tabName === 'mall') {
+                document.getElementById('mallTab').style.display = 'block';
+                renderMall();
+            } else if (tabName === 'inventory') {
+                document.getElementById('inventoryTab').style.display = 'block';
+                renderInventory();
+            } else if (tabName === 'history') {
+                document.getElementById('historyTab').style.display = 'block';
+                renderHistory();
+            }
+        }
+        
+        // 渲染商城
+        function renderMall() {
+            const container = document.getElementById('mallTab');
+            mallManager.renderMall(container, userAccessoryManager.getPoints(), handlePurchase);
+        }
+        
+        // 处理购买
+        function handlePurchase(accessory) {
+            // 显示确认弹窗
+            showPurchaseConfirm(accessory, () => {
+                // 确认购买
+                const result = userAccessoryManager.purchaseAccessory(accessory);
+                
+                if (result.success) {
+                    showSuccessToast(`成功购买 ${accessory.name}！`);
+                    
+                    // 同步积分到学生数据
+                    syncPointsToStudent();
+                    
+                    // 刷新商城
+                    setTimeout(() => {
+                        renderMall();
+                    }, 1000);
+                } else {
+                    alert(result.message);
+                }
+            });
+        }
+        
+        // 显示购买确认弹窗
+        function showPurchaseConfirm(accessory, onConfirm) {
+            const modal = document.createElement('div');
+            modal.className = 'purchase-confirm-modal';
+            modal.innerHTML = `
+                <div class="confirm-content">
+                    <div class="confirm-title">确认购买</div>
+                    <div class="confirm-item">
+                        <div class="confirm-emoji">${accessory.emoji}</div>
+                        <div class="confirm-details">
+                            <div class="confirm-name">${accessory.name}</div>
+                            <div class="confirm-category">${accessory.categoryName}</div>
+                        </div>
+                    </div>
+                    <div class="confirm-points-info">
+                        <div class="confirm-point-row">
+                            <span>商品价格：</span>
+                            <span style="color: #FFD700">${accessory.points} 积分</span>
+                        </div>
+                        <div class="confirm-point-row">
+                            <span>当前积分：</span>
+                            <span style="color: #4CAF50">${userAccessoryManager.getPoints()} 积分</span>
+                        </div>
+                        <div class="confirm-point-row">
+                            <span>购买后剩余：</span>
+                            <span style="color: ${userAccessoryManager.getPoints() - accessory.points >= 0 ? '#4CAF50' : '#E74C3C'}">
+                                ${userAccessoryManager.getPoints() - accessory.points} 积分
+                            </span>
+                        </div>
+                    </div>
+                    <div class="confirm-buttons">
+                        <button class="btn-confirm">确认购买</button>
+                        <button class="btn-cancel">取消</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // 绑定按钮事件
+            modal.querySelector('.btn-confirm').addEventListener('click', () => {
+                modal.remove();
+                onConfirm();
+            });
+            
+            modal.querySelector('.btn-cancel').addEventListener('click', () => {
+                modal.remove();
+            });
+            
+            // 点击背景关闭
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+        
+        // 显示成功提示
+        function showSuccessToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'success-toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+        
+        // 渲染库存
+        function renderInventory() {
+            const container = document.getElementById('inventoryTab');
+            userAccessoryManager.renderInventory(container, handleWear, handleRemove);
+        }
+        
+        // 处理穿戴
+        function handleWear(accessoryId) {
+            const result = userAccessoryManager.wearAccessory(accessoryId);
+            
+            if (result.success) {
+                showSuccessToast(result.message);
+                setTimeout(() => {
+                    renderInventory();
+                }, 500);
+            } else {
+                alert(result.message);
+            }
+        }
+        
+        // 处理脱下
+        function handleRemove(category) {
+            const result = userAccessoryManager.removeAccessory(category);
+            
+            if (result.success) {
+                showSuccessToast(result.message);
+                setTimeout(() => {
+                    renderInventory();
+                }, 500);
+            } else {
+                alert(result.message);
+            }
+        }
+        
+        // 渲染历史记录
+        function renderHistory() {
+            const container = document.getElementById('historyTab');
+            userAccessoryManager.renderPointsHistory(container);
+        }
+        
+        // 同步积分到学生数据
+        function syncPointsToStudent() {
+            const dataManager = new DataManager();
+            const student = dataManager.getStudentById(parseInt(currentStudentId));
+            if (student) {
+                student.score = userAccessoryManager.getPoints();
+                dataManager.saveStudents();
+            }
+        }
+        
+        // 初始化
+        init();
+    </script>
+</body>
+</html>

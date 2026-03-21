@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ClassPet Pro - 教师管理</title>
     <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="assets/css/rich-text-editor.css">
+    <link rel="stylesheet" href="assets/css/enhanced-uploader.css">
+    <link rel="stylesheet" href="assets/css/image-editor.css">
+    <link rel="stylesheet" href="assets/css/admin-homework.css">
+    <link rel="stylesheet" href="assets/css/student-importer.css">
+    <link rel="stylesheet" href="assets/css/auth-manager.css">
+    <link rel="stylesheet" href="assets/css/teacher-item-uploader.css">
 </head>
 <body>
     <div id="app">
@@ -32,6 +39,10 @@
                         <span class="icon">🎁</span>
                         <span class="label">兑换奖励</span>
                     </button>
+                    <button class="action-btn" id="btnHomeworkManage">
+                        <span class="icon">📚</span>
+                        <span class="label">作业管理</span>
+                    </button>
                     <button class="action-btn" id="btnExport">
                         <span class="icon">📊</span>
                         <span class="label">导出数据</span>
@@ -39,6 +50,10 @@
                     <button class="action-btn" id="btnSettings">
                         <span class="icon">⚙️</span>
                         <span class="label">班级设置</span>
+                    </button>
+                    <button class="action-btn" id="btnItemMall">
+                        <span class="icon">🛍️</span>
+                        <span class="label">物品商城</span>
                     </button>
                 </div>
             </section>
@@ -102,6 +117,7 @@
                     <h2>👥 学生管理</h2>
                     <div class="search-box">
                         <input type="text" id="searchStudent" placeholder="搜索学生...">
+                        <button id="btnImportStudents">📥 批量导入</button>
                         <button id="btnAddStudent">➕ 添加</button>
                     </div>
                 </div>
@@ -110,6 +126,19 @@
                 </div>
             </section>
         </main>
+
+        <!-- 批量导入学生弹窗 -->
+        <div class="modal" id="importStudentModal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h3>📥 批量导入学生</h3>
+                    <button class="close-btn" id="closeImportModal">&times;</button>
+                </div>
+                <div id="importContainer">
+                    <!-- 导入界面 -->
+                </div>
+            </div>
+        </div>
 
         <!-- 学生详情/编辑弹窗 -->
         <div class="modal" id="studentEditModal">
@@ -121,6 +150,11 @@
                 <div class="form-group">
                     <label>姓名</label>
                     <input type="text" id="editName" placeholder="学生姓名">
+                </div>
+                <div class="form-group">
+                    <label>登录密码</label>
+                    <input type="text" id="editPassword" placeholder="请输入密码（至少 4 位）">
+                    <small>学生将使用姓名和密码登录系统</small>
                 </div>
                 <div class="form-group">
                     <label>当前积分</label>
@@ -300,6 +334,275 @@
             </div>
         </div>
 
+        <!-- 作业管理弹窗 -->
+        <div class="modal" id="homeworkModal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h3>📚 作业管理</h3>
+                    <button class="close-btn" id="closeHomeworkModal">&times;</button>
+                </div>
+                
+                <div class="homework-tabs">
+                    <button class="tab-btn active" data-tab="homework-list">作业列表</button>
+                    <button class="tab-btn" data-tab="create-homework">发布作业</button>
+                    <button class="tab-btn" data-tab="review-homework">作业审核</button>
+                </div>
+                
+                <div class="tab-content" id="homeworkContent">
+                    <!-- 作业列表 -->
+                    <div class="tab-panel active" data-panel="homework-list">
+                        <div class="homework-list-header">
+                            <h4>已发布的作业</h4>
+                            <button class="btn-primary" id="btnRefreshHomework">🔄 刷新</button>
+                        </div>
+                        <div class="homework-list" id="homeworkList">
+                            <!-- 动态生成 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 发布作业 -->
+                    <div class="tab-panel" data-panel="create-homework">
+                        <form id="homeworkForm">
+                            <!-- 基本信息 -->
+                            <div class="form-section">
+                                <h4 class="section-title">📋 基本信息</h4>
+                                
+                                <div class="form-group">
+                                    <label>作业标题 <span class="required">*</span></label>
+                                    <input type="text" id="homeworkTitle" placeholder="请输入作业标题" required maxlength="50">
+                                    <div class="input-hint">最多50个字符</div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>作业类型 <span class="required">*</span></label>
+                                        <div class="category-selector" id="categorySelector">
+                                            <!-- 动态生成 -->
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>难度级别</label>
+                                        <select id="homeworkDifficulty">
+                                            <option value="easy">⭐ 简单</option>
+                                            <option value="medium" selected>⭐⭐ 中等</option>
+                                            <option value="hard">⭐⭐⭐ 困难</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>科目</label>
+                                        <input type="text" id="homeworkSubject" value="语文" placeholder="科目名称" list="subjectList">
+                                        <datalist id="subjectList">
+                                            <option value="语文">
+                                            <option value="数学">
+                                            <option value="英语">
+                                            <option value="物理">
+                                            <option value="化学">
+                                            <option value="生物">
+                                            <option value="历史">
+                                            <option value="地理">
+                                            <option value="政治">
+                                            <option value="音乐">
+                                            <option value="美术">
+                                            <option value="体育">
+                                        </datalist>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>积分值 <span class="required">*</span></label>
+                                        <input type="number" id="homeworkPoints" value="10" min="1" max="100" required>
+                                        <div class="input-hint">1-100分</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 时间设置 -->
+                            <div class="form-section">
+                                <h4 class="section-title">⏰ 时间设置</h4>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>发布时间</label>
+                                        <input type="datetime-local" id="homeworkPublishTime">
+                                        <div class="input-hint">留空则立即发布</div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>截止时间 <span class="required">*</span></label>
+                                        <input type="datetime-local" id="homeworkDueDate" required>
+                                        <div class="input-hint">精确到分钟</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>快捷设置</label>
+                                    <div class="quick-time-buttons">
+                                        <button type="button" class="quick-time-btn" data-days="1">明天</button>
+                                        <button type="button" class="quick-time-btn" data-days="3">3天后</button>
+                                        <button type="button" class="quick-time-btn" data-days="7">一周后</button>
+                                        <button type="button" class="quick-time-btn" data-days="14">两周后</button>
+                                        <button type="button" class="quick-time-btn" data-days="30">一个月后</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 作业描述 -->
+                            <div class="form-section">
+                                <h4 class="section-title">📝 作业描述</h4>
+                                
+                                <div class="form-group">
+                                    <label>详细描述</label>
+                                    <div id="homeworkDescriptionEditor">
+                                        <!-- 富文本编辑器 -->
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>作业要求</label>
+                                    <div class="requirements-editor">
+                                        <div class="requirements-list" id="requirementsList">
+                                            <!-- 动态生成 -->
+                                        </div>
+                                        <div class="requirement-input">
+                                            <input type="text" id="newRequirement" placeholder="输入作业要求，按回车添加">
+                                            <button type="button" class="btn-add-requirement" id="btnAddRequirement">➕ 添加</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 附件上传 -->
+                            <div class="form-section">
+                                <h4 class="section-title">📎 附件上传</h4>
+                                
+                                <div class="form-group">
+                                    <label>作业附件</label>
+                                    <div class="attachment-upload" id="attachmentUpload">
+                                        <!-- 增强版上传组件 -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 高级设置 -->
+                            <div class="form-section collapsible">
+                                <h4 class="section-title">
+                                    <span class="toggle-icon">▶</span>
+                                    高级设置
+                                </h4>
+                                
+                                <div class="section-content" style="display: none;">
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" id="allowLateSubmit">
+                                            允许迟交
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" id="allowResubmit">
+                                            允许重新提交
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" id="sendNotification" checked>
+                                            发送通知给学生
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>提醒时间</label>
+                                        <select id="reminderTime">
+                                            <option value="24">截止前24小时</option>
+                                            <option value="12">截止前12小时</option>
+                                            <option value="6">截止前6小时</option>
+                                            <option value="1">截止前1小时</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn-secondary" id="btnSaveDraft">💾 保存草稿</button>
+                                <button type="button" class="btn-secondary" id="btnPreviewHomework">👁️ 预览</button>
+                                <button type="submit" class="btn-primary" id="btnPublishHomework">📤 发布作业</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- 作业审核 -->
+                    <div class="tab-panel" data-panel="review-homework">
+                        <div class="review-header">
+                            <h4>待审核的作业</h4>
+                            <div class="review-filters">
+                                <select id="reviewHomeworkFilter">
+                                    <option value="all">全部作业</option>
+                                    <option value="submitted">已提交</option>
+                                    <option value="reviewed">已审核</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="submission-list" id="submissionList">
+                            <!-- 动态生成 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 作业预览弹窗 -->
+        <div class="modal" id="homeworkPreviewModal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h3>👁️ 作业预览</h3>
+                    <button class="close-btn" id="closePreviewModal">&times;</button>
+                </div>
+                <div class="preview-content" id="previewContent">
+                    <!-- 动态生成 -->
+                </div>
+                <div class="form-actions">
+                    <button class="btn-secondary" id="btnClosePreview">返回编辑</button>
+                    <button class="btn-primary" id="btnConfirmPublish">确认发布</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 作业审核弹窗 -->
+        <div class="modal" id="reviewSubmissionModal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h3>📝 作业审核</h3>
+                    <button class="close-btn" id="closeReviewModal">&times;</button>
+                </div>
+                <div class="review-content" id="reviewContent">
+                    <!-- 动态生成 -->
+                </div>
+                <div class="form-actions">
+                    <button class="btn-secondary" id="btnCancelReview">取消</button>
+                    <button class="btn-success" id="btnApproveSubmission">✅ 通过</button>
+                    <button class="btn-warning" id="btnRejectSubmission">❌ 需修改</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 物品管理模态框 -->
+        <div class="modal" id="itemMallModal">
+            <div class="modal-content modal-full">
+                <div class="modal-header">
+                    <h3>🛍️ 物品商城管理</h3>
+                    <button class="close-btn" id="closeItemMallModal">&times;</button>
+                </div>
+                <div class="modal-body" id="itemMallContent">
+                    <!-- 动态加载物品上传界面 -->
+                </div>
+            </div>
+        </div>
+
         <!--  Toast 提示 -->
         <div class="toast" id="toast"></div>
     </div>
@@ -310,6 +613,16 @@
     <script src="js/effects.js"></script>
     <script src="js/feishu-sync.js"></script>
     <script src="js/stats.js"></script>
+    <script src="js/score-pet-manager.js"></script>
+    <script src="js/homework-manager.js"></script>
+    <script src="js/rich-text-editor.js"></script>
+    <script src="js/homework-category-manager.js"></script>
+    <script src="js/enhanced-uploader.js"></script>
+    <script src="js/image-editor.js"></script>
+    <script src="js/student-importer.js"></script>
+    <script src="js/auth-manager.js"></script>
+    <script src="js/item-database.js"></script>
+    <script src="js/teacher-item-uploader.js"></script>
     <script src="js/admin.js"></script>
 </body>
 </html>

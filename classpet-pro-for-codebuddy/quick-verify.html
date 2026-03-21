@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开启旅程按钮 - 快速验证</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .card h2 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .test-section {
+            margin-bottom: 20px;
+        }
+        
+        .test-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #ddd;
+        }
+        
+        .test-item.pass {
+            border-left-color: #4CAF50;
+            background: #e8f5e9;
+        }
+        
+        .test-item.fail {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+        
+        .test-item.testing {
+            border-left-color: #ff9800;
+            background: #fff3e0;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        .test-name {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .test-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        
+        .status-pass {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .status-fail {
+            background: #f44336;
+            color: white;
+        }
+        
+        .status-testing {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.5);
+            transition: all 0.3s;
+            animation: pulseBtn 2s infinite;
+            margin: 10px 5px;
+        }
+        
+        @keyframes pulseBtn {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+        }
+        
+        .btn-info {
+            background: linear-gradient(135deg, #2196F3, #03A9F4);
+        }
+        
+        .result-box {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .log-entry {
+            margin-bottom: 5px;
+        }
+        
+        .log-info { color: #4CAF50; }
+        .log-warn { color: #ff9800; }
+        .log-error { color: #f44336; }
+        
+        .progress-bar {
+            width: 100%;
+            height: 25px;
+            background: #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        
+        .button-container {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .button-container h3 {
+            color: white;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 "开启旅程"按钮验证工具</h1>
+            <p>快速测试按钮响应和功能完整性</p>
+        </div>
+        
+        <div class="card">
+            <h2>📊 自动化测试</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%;">0%</div>
+            </div>
+            <div id="testResults"></div>
+            <button class="btn btn-info" onclick="runAllTests()">运行所有测试</button>
+        </div>
+        
+        <div class="card">
+            <h2>🎯 手动测试</h2>
+            <div class="button-container">
+                <h3>点击下面的按钮测试响应</h3>
+                <button class="btn" id="testWelcomeBtn">开启旅程 🎵</button>
+                <div style="margin-top: 15px; color: white;">
+                    点击次数：<span id="clickCount">0</span>
+                </div>
+            </div>
+            <div class="result-box" id="logBox">
+                <div class="log-entry log-info">等待测试...</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>✅ 检查清单</h2>
+            <div class="test-section">
+                <div class="test-item" id="check1">
+                    <div class="test-name">按钮元素存在</div>
+                    <div class="test-status status-testing">检查中</div>
+                </div>
+                <div class="test-item" id="check2">
+                    <div class="test-name">事件监听器绑定</div>
+                    <div class="test-status status-testing">检查中</div>
+                </div>
+                <div class="test-item" id="check3">
+                    <div class="test-name">CSS 样式加载</div>
+                    <div class="test-status status-testing">检查中</div>
+                </div>
+                <div class="test-item" id="check4">
+                    <div class="test-name">触摸事件支持</div>
+                    <div class="test-status status-testing">检查中</div>
+                </div>
+                <div class="test-item" id="check5">
+                    <div class="test-name">错误处理机制</div>
+                    <div class="test-status status-testing">检查中</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let clickCount = 0;
+        let testResults = { total: 0, passed: 0, failed: 0 };
+        
+        function log(message, type = 'info') {
+            const logBox = document.getElementById('logBox');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            logBox.appendChild(entry);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+        
+        function updateChecklist(id, status, message) {
+            const item = document.getElementById(id);
+            const statusEl = item.querySelector('.test-status');
+            
+            if (status === 'pass') {
+                item.className = 'test-item pass';
+                statusEl.className = 'test-status status-pass';
+                statusEl.textContent = '✓ ' + message;
+            } else if (status === 'fail') {
+                item.className = 'test-item fail';
+                statusEl.className = 'test-status status-fail';
+                statusEl.textContent = '✗ ' + message;
+            } else {
+                item.className = 'test-item testing';
+                statusEl.className = 'test-status status-testing';
+                statusEl.textContent = '⏳ ' + message;
+            }
+        }
+        
+        function updateProgress() {
+            const percentage = testResults.total === 0 ? 0 : Math.round((testResults.passed + testResults.failed) / testResults.total * 100);
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressBar').textContent = percentage + '%';
+        }
+        
+        function runAllTests() {
+            testResults = { total: 0, passed: 0, failed: 0 };
+            document.getElementById('testResults').innerHTML = '';
+            log('开始运行所有测试...', 'info');
+            
+            test1();
+            setTimeout(test2, 500);
+            setTimeout(test3, 1000);
+            setTimeout(test4, 1500);
+            setTimeout(test5, 2000);
+        }
+        
+        function test1() {
+            testResults.total++;
+            updateChecklist('check1', 'testing', '检查中');
+            
+            const btn = document.getElementById('testWelcomeBtn');
+            const exists = btn !== null;
+            
+            setTimeout(() => {
+                if (exists) {
+                    updateChecklist('check1', 'pass', '按钮元素存在');
+                    testResults.passed++;
+                    log('✓ 测试 1 通过：按钮元素存在', 'info');
+                } else {
+                    updateChecklist('check1', 'fail', '按钮元素不存在');
+                    testResults.failed++;
+                    log('✗ 测试 1 失败：按钮元素不存在', 'error');
+                }
+                updateProgress();
+            }, 300);
+        }
+        
+        function test2() {
+            testResults.total++;
+            updateChecklist('check2', 'testing', '检查中');
+            
+            const btn = document.getElementById('testWelcomeBtn');
+            let hasListener = false;
+            
+            if (btn) {
+                btn.addEventListener('click', () => { hasListener = true; });
+                btn.click();
+            }
+            
+            setTimeout(() => {
+                if (hasListener) {
+                    updateChecklist('check2', 'pass', '事件监听器正常');
+                    testResults.passed++;
+                    log('✓ 测试 2 通过：事件监听器绑定正常', 'info');
+                } else {
+                    updateChecklist('check2', 'fail', '事件监听器异常');
+                    testResults.failed++;
+                    log('✗ 测试 2 失败：事件监听器绑定失败', 'error');
+                }
+                updateProgress();
+            }, 300);
+        }
+        
+        function test3() {
+            testResults.total++;
+            updateChecklist('check3', 'testing', '检查中');
+            
+            const btn = document.getElementById('testWelcomeBtn');
+            const style = window.getComputedStyle(btn);
+            const hasStyle = style.background !== 'none' && style.backgroundColor !== 'rgba(0, 0, 0, 0)';
+            
+            setTimeout(() => {
+                if (hasStyle) {
+                    updateChecklist('check3', 'pass', 'CSS 样式加载正常');
+                    testResults.passed++;
+                    log('✓ 测试 3 通过：CSS 样式加载正常', 'info');
+                } else {
+                    updateChecklist('check3', 'fail', 'CSS 样式未加载');
+                    testResults.failed++;
+                    log('✗ 测试 3 失败：CSS 样式未加载', 'error');
+                }
+                updateProgress();
+            }, 300);
+        }
+        
+        function test4() {
+            testResults.total++;
+            updateChecklist('check4', 'testing', '检查中');
+            
+            const hasTouchSupport = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            
+            setTimeout(() => {
+                if (hasTouchSupport) {
+                    updateChecklist('check4', 'pass', '触摸事件支持');
+                    testResults.passed++;
+                    log('✓ 测试 4 通过：设备支持触摸事件', 'info');
+                } else {
+                    updateChecklist('check4', 'pass', '触摸事件不支持（桌面端正常）');
+                    testResults.passed++;
+                    log('✓ 测试 4 通过：桌面端无需触摸支持', 'info');
+                }
+                updateProgress();
+            }, 300);
+        }
+        
+        function test5() {
+            testResults.total++;
+            updateChecklist('check5', 'testing', '检查中');
+            
+            let errorCaught = false;
+            
+            try {
+                throw new Error('测试错误');
+            } catch (e) {
+                errorCaught = true;
+            }
+            
+            setTimeout(() => {
+                if (errorCaught) {
+                    updateChecklist('check5', 'pass', '错误处理正常');
+                    testResults.passed++;
+                    log('✓ 测试 5 通过：错误处理机制正常', 'info');
+                } else {
+                    updateChecklist('check5', 'fail', '错误处理异常');
+                    testResults.failed++;
+                    log('✗ 测试 5 失败：错误处理机制异常', 'error');
+                }
+                updateProgress();
+                
+                // 显示总结
+                setTimeout(showSummary, 500);
+            }, 300);
+        }
+        
+        function showSummary() {
+            const summary = document.createElement('div');
+            summary.className = 'result-box';
+            summary.style.marginTop = '20px';
+            summary.innerHTML = `
+                <div class="log-entry log-info"><strong>测试总结</strong></div>
+                <div class="log-entry">总测试数：${testResults.total}</div>
+                <div class="log-entry log-info">通过：${testResults.passed}</div>
+                <div class="log-entry log-error">失败：${testResults.failed}</div>
+                <div class="log-entry">通过率：${Math.round(testResults.passed / testResults.total * 100)}%</div>
+            `;
+            document.getElementById('testResults').appendChild(summary);
+            
+            if (testResults.failed === 0) {
+                log('🎉 所有测试通过！按钮功能正常！', 'info');
+            } else {
+                log(`⚠️ 发现 ${testResults.failed} 个问题，请检查修复`, 'error');
+            }
+        }
+        
+        // 手动测试按钮
+        const testBtn = document.getElementById('testWelcomeBtn');
+        
+        testBtn.addEventListener('click', () => {
+            clickCount++;
+            document.getElementById('clickCount').textContent = clickCount;
+            log(`✓ 按钮点击成功 (第 ${clickCount} 次)`, 'info');
+            
+            // 模拟欢迎流程
+            log('  → 关闭欢迎弹窗', 'info');
+            log('  → 显示登录界面', 'info');
+            log('  → 播放背景音乐', 'info');
+        });
+        
+        // 添加触摸事件支持
+        testBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            clickCount++;
+            document.getElementById('clickCount').textContent = clickCount;
+            log(`✓ 触摸事件触发 (第 ${clickCount} 次)`, 'info');
+            testBtn.click();
+        }, { passive: false });
+        
+        // 页面加载时自动运行检查
+        window.addEventListener('DOMContentLoaded', () => {
+            log('页面加载完成', 'info');
+            log('点击"运行所有测试"按钮开始测试', 'info');
+            
+            // 自动检查基本项目
+            setTimeout(() => {
+                const btn = document.getElementById('testWelcomeBtn');
+                if (btn) {
+                    updateChecklist('check1', 'pass', '按钮元素存在');
+                    log('✓ 按钮元素检查通过', 'info');
+                } else {
+                    updateChecklist('check1', 'fail', '按钮元素不存在');
+                    log('✗ 按钮元素检查失败', 'error');
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>

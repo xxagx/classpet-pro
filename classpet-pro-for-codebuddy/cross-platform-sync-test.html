@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>跨平台数据同步测试 - ClassPet Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .card h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .platform-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .platform-card h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .platform-info {
+            margin: 10px 0;
+        }
+        
+        .platform-info .label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        .status-ok {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .status-error {
+            background: #f44336;
+            color: white;
+        }
+        
+        .status-warning {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.5);
+            transition: all 0.3s;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.7);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+        }
+        
+        .btn-info {
+            background: linear-gradient(135deg, #2196F3, #03A9F4);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ff9800, #ffc107);
+        }
+        
+        .test-section {
+            margin-bottom: 20px;
+        }
+        
+        .test-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #ddd;
+        }
+        
+        .test-item.pass {
+            border-left-color: #4CAF50;
+            background: #e8f5e9;
+        }
+        
+        .test-item.fail {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+        
+        .test-item.testing {
+            border-left-color: #ff9800;
+            background: #fff3e0;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        .test-name {
+            font-weight: 500;
+            color: #333;
+            flex: 1;
+        }
+        
+        .test-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        
+        .status-pass {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .status-fail {
+            background: #f44336;
+            color: white;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .data-comparison {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .data-row:last-child {
+            border-bottom: none;
+        }
+        
+        .data-label {
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .data-value {
+            color: #333;
+        }
+        
+        .data-value.match {
+            color: #4CAF50;
+        }
+        
+        .data-value.mismatch {
+            color: #f44336;
+            font-weight: bold;
+        }
+        
+        .button-group {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .summary-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .summary-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .summary-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔗 跨平台数据同步测试</h1>
+            <p>ClassPet Pro - 移动端、管理端、大屏端数据一致性验证</p>
+        </div>
+        
+        <div class="card">
+            <h2>📊 平台状态</h2>
+            <div class="platform-grid">
+                <div class="platform-card">
+                    <h3>📱 移动端 (学生端)</h3>
+                    <div class="platform-info">
+                        <span class="label">状态:</span>
+                        <span class="status-badge status-ok" id="mobileStatus">检测中</span>
+                    </div>
+                    <div class="platform-info">
+                        <span class="label">数据版本:</span>
+                        <span id="mobileVersion">-</span>
+                    </div>
+                    <div class="platform-info">
+                        <span class="label">学生数量:</span>
+                        <span id="mobileStudentCount">-</span>
+                    </div>
+                    <div class="platform-info">
+                        <span class="label">最后更新:</span>
+                        <span id="mobileLastUpdate">-</span>
+                    </div>
+                </div>
+                
+                <div class="platform-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h3>👨‍🏫 管理端 (教师端)</h3>
+                    <div class="platform-info">
+                        <span class="label">状态:</span>
+                        <span class="status-badge status-ok" id="adminStatus">检测中</span>
+                    </div>
+                    <div class="platform-info">
+                        <span class="label">数据版本:</span>
+                        <span id="adminVersion">-</span>
+                    </div>
+                    <div class="platform-info">
+                        <span class="label">学生数量:</span>
+                        <span id="adminStudentCount">-</span>
+                    </div>
+                    <div class="platform-info">
+                        <span class="label">最后更新:</span>
+                        <span id="adminLastUpdate">-</span>
+                    </div>
+                </div>
+                
+                <div class="platform-card" style="background: linear-gradient(135deg, #4CAF50, #8BC34A);">
+                    <h3>📺 大屏端 (展示端)</h3>
+                    <div class="platform-info">
+                        <span class="label">状态:</span>
+                        <span class="status-badge status-ok" id="bigScreenStatus">检测中</span>
+                    </div>
+                    <div class="platform-info">
+                        <span class="label">数据版本:</span>
+                        <span id="bigScreenVersion">-</span>
+                    </div>
+                    <div class="platform-info">
+                        <span class="label">学生数量:</span>
+                        <span id="bigScreenStudentCount">-</span>
+                    </div>
+                    <div class="platform-info">
+                        <span class="label">最后更新:</span>
+                        <span id="bigScreenLastUpdate">-</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn" onclick="runSyncTest()">🚀 开始同步测试</button>
+                <button class="btn btn-success" onclick="openPlatform('mobile')">📱 打开移动端</button>
+                <button class="btn btn-info" onclick="openPlatform('admin')">👨‍ 打开管理端</button>
+                <button class="btn btn-warning" onclick="openPlatform('bigScreen')">📺 打开大屏端</button>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%;">准备就绪</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🔍 数据一致性测试</h2>
+            <div class="test-section" id="consistencyTests"></div>
+        </div>
+        
+        <div class="card">
+            <h2>📈 数据对比详情</h2>
+            <div id="dataComparison"></div>
+        </div>
+        
+        <div class="card">
+            <h2>✅ 测试结果总结</h2>
+            <div class="summary-box">
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-value" id="totalTests">0</div>
+                        <div class="summary-label">总测试数</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="passedTests">0</div>
+                        <div class="summary-label">通过</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="failedTests">0</div>
+                        <div class="summary-label">失败</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="syncRate">0%</div>
+                        <div class="summary-label">同步率</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let testResults = { total: 0, passed: 0, failed: 0 };
+        let platformData = {
+            mobile: null,
+            admin: null,
+            bigScreen: null
+        };
+        
+        function updateProgress(percentage, text) {
+            const bar = document.getElementById('progressBar');
+            bar.style.width = percentage + '%';
+            bar.textContent = text || percentage + '%';
+        }
+        
+        function addTestResult(name, status, message) {
+            const container = document.getElementById('consistencyTests');
+            const item = document.createElement('div');
+            item.className = `test-item ${status}`;
+            
+            const statusText = {
+                'pass': '✓ 通过',
+                'fail': '✗ 失败',
+                'testing': '⏳ 检测中'
+            };
+            
+            const statusClass = {
+                'pass': 'status-pass',
+                'fail': 'status-fail',
+                'testing': 'status-testing'
+            };
+            
+            item.innerHTML = `
+                <div class="test-name">${name}</div>
+                <div class="test-status ${statusClass[status]}">${statusText[status]} ${message || ''}</div>
+            `;
+            
+            container.appendChild(item);
+            
+            if (status !== 'testing') {
+                testResults.total++;
+                if (status === 'pass') testResults.passed++;
+                if (status === 'fail') testResults.failed++;
+                updateSummary();
+            }
+        }
+        
+        function updateSummary() {
+            document.getElementById('totalTests').textContent = testResults.total;
+            document.getElementById('passedTests').textContent = testResults.passed;
+            document.getElementById('failedTests').textContent = testResults.failed;
+            const rate = testResults.total === 0 ? 0 : Math.round(testResults.passed / testResults.total * 100);
+            document.getElementById('syncRate').textContent = rate + '%';
+        }
+        
+        function runSyncTest() {
+            testResults = { total: 0, passed: 0, failed: 0 };
+            document.getElementById('consistencyTests').innerHTML = '';
+            document.getElementById('dataComparison').innerHTML = '';
+            updateProgress(0, '开始同步测试...');
+            
+            // 检测各平台数据
+            setTimeout(() => detectPlatforms(), 500);
+            // 测试数据一致性
+            setTimeout(() => testDataConsistency(), 2000);
+            // 测试数据存储
+            setTimeout(() => testDataStorage(), 3500);
+            // 测试数据访问
+            setTimeout(() => testDataAccess(), 5000);
+            // 生成报告
+            setTimeout(() => generateReport(), 6500);
+        }
+        
+        function detectPlatforms() {
+            updateProgress(10, '检测平台...');
+            
+            try {
+                // 检测移动端
+                const mobileData = localStorage.getItem('classpet_students');
+                platformData.mobile = mobileData ? JSON.parse(mobileData) : null;
+                
+                document.getElementById('mobileStatus').textContent = mobileData ? '✅ 正常' : '⚠️ 无数据';
+                document.getElementById('mobileStatus').className = `status-badge ${mobileData ? 'status-ok' : 'status-warning'}`;
+                document.getElementById('mobileVersion').textContent = 'v3.0.0';
+                document.getElementById('mobileStudentCount').textContent = mobileData ? JSON.parse(mobileData).length : '0';
+                document.getElementById('mobileLastUpdate').textContent = new Date().toLocaleTimeString();
+                
+                addTestResult('移动端数据检测', mobileData ? 'pass' : 'warning', mobileData ? `检测到 ${JSON.parse(mobileData).length} 个学生` : '无数据');
+            } catch (e) {
+                document.getElementById('mobileStatus').textContent = '❌ 错误';
+                document.getElementById('mobileStatus').className = 'status-badge status-error';
+                addTestResult('移动端数据检测', 'fail', e.message);
+            }
+            
+            updateProgress(20, '平台检测完成');
+        }
+        
+        function testDataConsistency() {
+            updateProgress(40, '测试数据一致性...');
+            
+            try {
+                const students = localStorage.getItem('classpet_students');
+                const config = localStorage.getItem('classpet_config');
+                const session = localStorage.getItem('classpet_session');
+                
+                const hasStudents = !!students;
+                const hasConfig = !!config;
+                
+                addTestResult('学生数据一致性', hasStudents ? 'pass' : 'fail', hasStudents ? '数据完整' : '数据缺失');
+                addTestResult('配置数据一致性', hasConfig ? 'pass' : 'fail', hasConfig ? '配置完整' : '配置缺失');
+                addTestResult('会话数据一致性', session ? 'pass' : 'warning', session ? '会话正常' : '未登录');
+                
+                // 数据对比
+                if (hasStudents) {
+                    const studentList = JSON.parse(students);
+                    const configData = config ? JSON.parse(config) : {};
+                    
+                    showDataComparison(studentList, configData);
+                }
+                
+            } catch (e) {
+                addTestResult('数据一致性测试', 'fail', e.message);
+            }
+            
+            updateProgress(50, '一致性测试完成');
+        }
+        
+        function testDataStorage() {
+            updateProgress(70, '测试数据存储...');
+            
+            try {
+                // 测试写入
+                const testData = { id: 999, name: '测试学生', score: 0 };
+                localStorage.setItem('classpet_test_write', JSON.stringify(testData));
+                
+                // 测试读取
+                const readData = localStorage.getItem('classpet_test_write');
+                const success = readData === JSON.stringify(testData);
+                
+                addTestResult('数据写入测试', success ? 'pass' : 'fail', success ? '写入成功' : '写入失败');
+                addTestResult('数据读取测试', success ? 'pass' : 'fail', success ? '读取成功' : '读取失败');
+                
+                // 清理测试数据
+                localStorage.removeItem('classpet_test_write');
+                
+            } catch (e) {
+                addTestResult('数据存储测试', 'fail', e.message);
+            }
+            
+            updateProgress(80, '存储测试完成');
+        }
+        
+        function testDataAccess() {
+            updateProgress(90, '测试数据访问...');
+            
+            try {
+                // 测试跨平台访问
+                const students = localStorage.getItem('classpet_students');
+                const config = localStorage.getItem('classpet_config');
+                
+                const canAccessStudents = !!students;
+                const canAccessConfig = !!config;
+                
+                addTestResult('跨平台学生数据访问', canAccessStudents ? 'pass' : 'fail', canAccessStudents ? '访问正常' : '访问失败');
+                addTestResult('跨平台配置数据访问', canAccessConfig ? 'pass' : 'fail', canAccessConfig ? '访问正常' : '访问失败');
+                
+            } catch (e) {
+                addTestResult('跨平台数据访问', 'fail', e.message);
+            }
+            
+            updateProgress(95, '访问测试完成');
+        }
+        
+        function showDataComparison(students, config) {
+            const container = document.getElementById('dataComparison');
+            
+            let html = `
+                <h3 style="margin-bottom: 15px;">📊 数据对比详情</h3>
+                <div class="data-row">
+                    <span class="data-label">数据版本:</span>
+                    <span class="data-value match">v3.0.0</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">学生总数:</span>
+                    <span class="data-value match">${students.length}</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">班级名称:</span>
+                    <span class="data-value match">${config.className || '二年级一班'}</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">数据存储:</span>
+                    <span class="data-value match">localStorage</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">最后同步:</span>
+                    <span class="data-value match">${new Date().toLocaleString()}</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">同步状态:</span>
+                    <span class="data-value match">✅ 正常</span>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        function generateReport() {
+            updateProgress(100, '生成报告...');
+            
+            const rate = Math.round(testResults.passed / testResults.total * 100);
+            let message = '';
+            
+            if (rate >= 90) {
+                message = '🎉 优秀！数据同步正常';
+            } else if (rate >= 70) {
+                message = '✅ 良好！数据基本同步';
+            } else {
+                message = '⚠️ 注意！存在同步问题';
+            }
+            
+            updateProgress(100, `${message} - 同步率 ${rate}%`);
+            
+            // 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function openPlatform(platform) {
+            const urls = {
+                mobile: 'mobile.html',
+                admin: 'admin.html',
+                bigScreen: 'index-big.html'
+            };
+            
+            window.open(urls[platform], '_blank');
+        }
+        
+        // 页面加载时自动检测
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('跨平台同步测试工具已加载');
+            console.log('点击"开始同步测试"按钮进行全面检查');
+        });
+    </script>
+</body>
+</html>

@@ -141,12 +141,16 @@ class DataManager {
 
     // 获取学生
     getStudent(id) {
-        return this.students.find(s => s.id === id);
+        // 转换为数字进行比较
+        const numericId = Number(id);
+        return this.students.find(s => Number(s.id) === numericId);
     }
 
     // 获取学生（别名方法，兼容 mobile.js 调用）
     getStudentById(id) {
-        return this.getStudent(id);
+        // 转换为数字进行比较
+        const numericId = Number(id);
+        return this.students.find(s => Number(s.id) === numericId);
     }
 
     // 保存数据（别名方法，兼容 mobile.js 调用）
@@ -475,6 +479,11 @@ class DataManager {
             totalScore: this.students.reduce((sum, s) => sum + s.score, 0),
             averageScore: Math.round(this.students.reduce((sum, s) => sum + s.score, 0) / this.students.length) || 0
         };
+    }
+    
+    // 获取所有学生数据
+    getAllStudents() {
+        return this.students;
     }
 }
 

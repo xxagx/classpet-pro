@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物品商城系统测试 - ClassPet Pro - Think-AI 俱乐部---贝贝老师</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/teacher-item-uploader.css">
+    <link rel="stylesheet" href="assets/css/student-item-mall.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+            padding: 20px;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        .test-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .test-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .test-header h1 {
+            font-size: 36px;
+            color: #FFD700;
+            text-shadow: 0 0 10px #FFD700;
+            margin-bottom: 10px;
+        }
+        
+        .test-header p {
+            font-size: 18px;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .test-nav {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .test-nav button {
+            padding: 15px 30px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .test-nav button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .test-nav button.active {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-color: #FFD700;
+            color: #1e3c72;
+        }
+        
+        .test-section {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.2);
+            display: none;
+        }
+        
+        .test-section.active {
+            display: block;
+        }
+        
+        .sync-btn {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #4CAF50, #45A049);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .sync-btn:hover {
+            background: linear-gradient(135deg, #45A049, #4CAF50);
+            transform: scale(1.05);
+        }
+        
+        .test-info {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .test-info h3 {
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+        
+        /* 修复下拉选择框样式 */
+        .student-selector select {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: white !important;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .student-selector select option {
+            background: #1e3c72;
+            color: white !important;
+            padding: 10px;
+        }
+        
+        .student-selector select option:hover {
+            background: #2a5298;
+        }
+        
+        .student-selector select option:checked {
+            background: #FFD700;
+            color: #1e3c72 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🛍️ 物品商城系统测试</h1>
+            <p>🚀 Think-AI 俱乐部 --- 贝贝老师荣誉出品 🚀</p>
+        </div>
+        
+        <div class="test-nav">
+            <button class="active" onclick="showSection('teacher')">👨‍🏫 教师端上传</button>
+            <button onclick="showSection('student')">🐾 学生端商城</button>
+            <button onclick="showSection('inventory')">🎒 学生库存</button>
+            <button onclick="showSection('data')">📊 数据管理</button>
+        </div>
+        
+        <!-- 教师端上传测试 -->
+        <div class="test-section active" id="teacherSection">
+            <div class="test-info">
+                <h3>📋 使用说明</h3>
+                <p>1. 在教师端上传物品，支持配饰、临时、武器三种类型</p>
+                <p>2. 上传的物品会自动保存到本地存储</p>
+                <p>3. 学生端可以查看和购买教师上传的物品</p>
+            </div>
+            <div id="teacherUploader"></div>
+        </div>
+        
+        <!-- 学生端商城测试 -->
+        <div class="test-section" id="studentSection">
+            <div class="test-info">
+                <h3>📋 使用说明</h3>
+                <p>1. 选择学生账号（需要先有学生数据）</p>
+                <p>2. 浏览商城物品，使用积分购买</p>
+                <p>3. 购买后积分会自动扣除</p>
+            </div>
+            <div class="student-selector" style="margin-bottom: 20px;">
+                <label style="color: white; margin-right: 10px;">选择学生：</label>
+                <select id="studentSelect" onchange="switchStudent()" style="padding: 10px 20px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; font-size: 14px;">
+                    <option value="">-- 选择学生 --</option>
+                </select>
+                <button class="sync-btn" onclick="addTestPoints()" style="margin-left: 10px;">+ 添加 500 测试积分</button>
+                <div id="currentPoints" style="margin-top: 15px; font-size: 18px; color: #FFD700;"></div>
+            </div>
+            <div id="studentMall"></div>
+        </div>
+        
+        <!-- 学生库存测试 -->
+        <div class="test-section" id="inventorySection">
+            <div class="test-info">
+                <h3>📋 使用说明</h3>
+                <p>1. 查看已购买的物品</p>
+                <p>2. 为宠物穿戴配饰或装备武器</p>
+                <p>3. 查看积分变动记录</p>
+            </div>
+            <div id="studentInventory"></div>
+        </div>
+        
+        <!-- 数据管理测试 -->
+        <div class="test-section" id="dataSection">
+            <div class="test-info">
+                <h3>📋 数据管理</h3>
+                <p>查看和管理物品数据库、用户数据等</p>
+            </div>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
+                <button class="sync-btn" onclick="showDatabaseInfo()">📊 查看物品数据库</button>
+                <button class="sync-btn" onclick="clearAllData()" style="background: linear-gradient(135deg, #E74C3C, #C0392B);">🗑️ 清空所有数据</button>
+                <button class="sync-btn" onclick="loadTestData()">📥 加载测试数据</button>
+            </div>
+            <div id="dataInfo" style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; color: white; max-height: 500px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <script src="js/data-manager.js"></script>
+    <script src="js/item-database.js"></script>
+    <script src="js/teacher-item-uploader.js"></script>
+    <script src="js/student-item-mall.js"></script>
+    
+    <script>
+        let currentStudentId = null;
+        let teacherUploader = null;
+        let studentMall = null;
+        let dataManager = null;
+        
+        // 初始化
+        function init() {
+            // 初始化数据管理器
+            dataManager = new DataManager();
+            window.dataManager = dataManager;
+            
+            // 初始化教师端上传器
+            teacherUploader = new TeacherItemUploader(document.getElementById('teacherUploader'), {
+                onItemAdded: (item) => {
+                    console.log('物品已添加:', item);
+                    alert(`成功添加物品：${item.name}`);
+                    if (studentMall) {
+                        studentMall.applyFilters(); // 刷新学生端商城
+                    }
+                },
+                onItemRemoved: (itemId) => {
+                    console.log('物品已删除:', itemId);
+                    if (studentMall) {
+                        studentMall.applyFilters(); // 刷新学生端商城
+                    }
+                }
+            });
+            
+            // 加载学生列表
+            loadStudents();
+            
+            // 显示数据库信息
+            showDatabaseInfo();
+        }
+        
+        // 切换标签页
+        function showSection(section) {
+            document.querySelectorAll('.test-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.test-nav button').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(section + 'Section').classList.add('active');
+            event.target.classList.add('active');
+            
+            if (section === 'student' && currentStudentId) {
+                initStudentMall();
+            } else if (section === 'inventory' && currentStudentId) {
+                initStudentInventory();
+            }
+        }
+        
+        // 加载学生列表
+        function loadStudents() {
+            const select = document.getElementById('studentSelect');
+            const students = dataManager.students || [];
+            
+            if (students.length === 0) {
+                select.innerHTML = '<option value="">-- 暂无学生，请先添加学生 --</option>';
+                return;
+            }
+            
+            select.innerHTML = '<option value="">-- 选择学生 --</option>' +
+                students.map(s => `<option value="${s.id}">${s.name} (积分：${s.score})</option>`).join('');
+        }
+        
+        // 切换学生
+        function switchStudent() {
+            const select = document.getElementById('studentSelect');
+            currentStudentId = select.value ? parseInt(select.value) : null;
+            
+            if (!currentStudentId) {
+                document.getElementById('currentPoints').textContent = '';
+                document.getElementById('studentMall').innerHTML = '';
+                document.getElementById('studentInventory').innerHTML = '';
+                return;
+            }
+            
+            const student = dataManager.getStudentById(currentStudentId);
+            if (student) {
+                document.getElementById('currentPoints').textContent = `💰 当前积分：${student.score}`;
+                initStudentMall();
+            }
+        }
+        
+        // 初始化学生端商城
+        function initStudentMall() {
+            if (!currentStudentId) return;
+            
+            studentMall = new StudentItemMall(currentStudentId);
+            studentMall.renderMall(document.getElementById('studentMall'));
+        }
+        
+        // 初始化学生库存
+        function initStudentInventory() {
+            if (!currentStudentId) return;
+            
+            const userItemManager = new UserItemManager(currentStudentId, dataManager);
+            userItemManager.renderInventory(document.getElementById('studentInventory'), (itemId) => {
+                const result = userItemManager.wearItem(itemId);
+                if (result.success) {
+                    alert(result.message);
+                    initStudentInventory(); // 刷新界面
+                } else {
+                    alert(result.message);
+                }
+            });
+        }
+        
+        // 添加测试积分
+        function addTestPoints() {
+            if (!currentStudentId) {
+                alert('请先选择学生');
+                return;
+            }
+            
+            const student = dataManager.getStudentById(currentStudentId);
+            if (student) {
+                student.score += 500;
+                dataManager.save();
+                document.getElementById('currentPoints').textContent = `💰 当前积分：${student.score}`;
+                alert(`已添加 500 积分，当前积分：${student.score}`);
+                
+                if (studentMall) {
+                    studentMall.applyFilters(); // 刷新商城
+                }
+            }
+        }
+        
+        // 显示数据库信息
+        function showDatabaseInfo() {
+            const itemDatabase = new ItemDatabaseManager();
+            const items = itemDatabase.getAllItems();
+            
+            const info = document.getElementById('dataInfo');
+            info.innerHTML = `
+                <h3 style="color: #FFD700; margin-bottom: 15px;">📊 物品数据库统计</h3>
+                <div style="margin-bottom: 20px;">
+                    <div style="font-size: 18px; margin-bottom: 10px;">
+                        📦 物品总数：<strong style="color: #FFD700">${items.length}</strong> 件
+                    </div>
+                    <div style="font-size: 16px; margin-bottom: 5px;">
+                        🎒 配饰类：<strong style="color: #3498DB">${items.filter(i => i.type === 'accessory').length}</strong> 件
+                    </div>
+                    <div style="font-size: 16px; margin-bottom: 5px;">
+                        🧪 临时类：<strong style="color: #9B59B6">${items.filter(i => i.type === 'temporary').length}</strong> 件
+                    </div>
+                    <div style="font-size: 16px; margin-bottom: 5px;">
+                        ⚔️ 武器类：<strong style="color: #E74C3C">${items.filter(i => i.type === 'weapon').length}</strong> 件
+                    </div>
+                </div>
+                
+                <h3 style="color: #FFD700; margin-bottom: 15px;">📋 物品列表</h3>
+                ${items.length === 0 ? '<div style="color: rgba(255,255,255,0.6);">暂无物品</div>' : ''}
+                ${items.map(item => `
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <div style="font-size: 16px; font-weight: bold; color: white; margin-bottom: 5px;">
+                            ${item.emoji} ${item.name}
+                        </div>
+                        <div style="font-size: 14px; color: rgba(255,255,255,0.7);">
+                            类型：${ITEM_TYPE_CONFIG[item.type].icon} ${ITEM_TYPE_CONFIG[item.type].name} | 
+                            分类：${itemDatabase.getCategoryName(item.category)} | 
+                            稀有度：<span style="color: ${ITEM_RARITY_CONFIG[item.rarity].color}">${ITEM_RARITY_CONFIG[item.rarity].name}</span>
+                        </div>
+                        <div style="font-size: 14px; color: #FFD700; margin-top: 5px;">
+                            💰 ${item.points} 积分
+                        </div>
+                    </div>
+                `).join('')}
+            `;
+        }
+        
+        // 清空所有数据
+        function clearAllData() {
+            if (confirm('确定要清空所有物品数据吗？此操作不可恢复！')) {
+                const itemDatabase = new ItemDatabaseManager();
+                itemDatabase.clearDatabase();
+                alert('物品数据库已清空');
+                showDatabaseInfo();
+                
+                // 刷新商城
+                if (studentMall) {
+                    studentMall.applyFilters();
+                }
+            }
+        }
+        
+        // 加载测试数据
+        function loadTestData() {
+            const itemDatabase = new ItemDatabaseManager();
+            
+            // 添加测试物品
+            const testItems = [
+                {
+                    name: '红色 T 恤',
+                    type: 'accessory',
+                    category: 'clothes',
+                    emoji: '👕',
+                    color: '#FF6B6B',
+                    points: 100,
+                    rarity: 'common',
+                    description: '经典的红色 T 恤，舒适百搭'
+                },
+                {
+                    name: '魔法法杖',
+                    type: 'weapon',
+                    category: 'wand',
+                    emoji: '🪄',
+                    color: '#9B59B6',
+                    points: 500,
+                    rarity: 'epic',
+                    description: '蕴含魔法力量的法杖',
+                    attack: 10,
+                    magic: 50
+                },
+                {
+                    name: '经验药水',
+                    type: 'temporary',
+                    category: 'potion',
+                    emoji: '🧪',
+                    color: '#2ECC71',
+                    points: 50,
+                    rarity: 'common',
+                    description: '使用后获得 100 积分',
+                    effect: {
+                        description: '积分 +100'
+                    },
+                    duration: 0
+                }
+            ];
+            
+            testItems.forEach(item => {
+                itemDatabase.addItem(item);
+            });
+            
+            alert(`已加载 ${testItems.length} 件测试物品`);
+            showDatabaseInfo();
+            
+            // 刷新商城
+            if (studentMall) {
+                studentMall.applyFilters();
+            }
+        }
+        
+        // 页面加载完成后初始化
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

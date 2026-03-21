@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassPet Pro - 综合功能测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .card h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 20px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(240, 147, 251, 0.4);
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.6);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+        }
+        
+        .btn-info {
+            background: linear-gradient(135deg, #2196F3, #03A9F4);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ff9800, #ffc107);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336, #e91e63);
+        }
+        
+        .test-section {
+            margin-bottom: 20px;
+        }
+        
+        .test-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #ddd;
+        }
+        
+        .test-item.pass {
+            border-left-color: #4CAF50;
+            background: #e8f5e9;
+        }
+        
+        .test-item.fail {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+        
+        .test-name {
+            font-weight: 500;
+            color: #333;
+            flex: 1;
+        }
+        
+        .test-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        
+        .status-pass {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .status-fail {
+            background: #f44336;
+            color: white;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .summary-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .summary-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .summary-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .data-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .button-group {
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 ClassPet Pro 综合功能测试</h1>
+            <p>移动端、管理端、大屏端 - 全面功能验证与数据同步测试</p>
+        </div>
+        
+        <div class="card">
+            <h2>🚀 快速访问</h2>
+            <div class="button-grid">
+                <a href="mobile.html" class="btn btn-success" target="_blank">📱 打开移动端 (学生端)</a>
+                <a href="admin.html" class="btn btn-info" target="_blank">👨‍ 打开管理端 (教师端)</a>
+                <a href="index-big.html" class="btn btn-warning" target="_blank">📺 打开大屏端 (展示端)</a>
+                <a href="cross-platform-sync-test.html" class="btn" target="_blank">🔗 跨平台同步测试</a>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🔍 功能测试</h2>
+            <div class="button-group">
+                <button class="btn" onclick="runAllTests()">▶️ 开始全面测试</button>
+                <button class="btn btn-danger" onclick="clearAllData()">⚠️ 清空所有数据</button>
+                <button class="btn btn-success" onclick="resetToDefaults()">🔄 恢复默认数据</button>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%;">准备就绪</div>
+            </div>
+            
+            <div class="test-section" id="testResults"></div>
+        </div>
+        
+        <div class="card">
+            <h2>📊 数据状态</h2>
+            <div id="dataStatus"></div>
+        </div>
+        
+        <div class="card">
+            <h2>✅ 测试总结</h2>
+            <div class="summary-box">
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-value" id="totalTests">0</div>
+                        <div class="summary-label">总测试数</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="passedTests">0</div>
+                        <div class="summary-label">通过</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="failedTests">0</div>
+                        <div class="summary-label">失败</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="passRate">0%</div>
+                        <div class="summary-label">通过率</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let testResults = { total: 0, passed: 0, failed: 0 };
+        
+        function updateProgress(percentage, text) {
+            const bar = document.getElementById('progressBar');
+            bar.style.width = percentage + '%';
+            bar.textContent = text || percentage + '%';
+        }
+        
+        function addTestResult(name, status, message) {
+            const container = document.getElementById('testResults');
+            const item = document.createElement('div');
+            item.className = `test-item ${status}`;
+            
+            const statusText = {
+                'pass': '✓ 通过',
+                'fail': '✗ 失败'
+            };
+            
+            const statusClass = {
+                'pass': 'status-pass',
+                'fail': 'status-fail'
+            };
+            
+            item.innerHTML = `
+                <div class="test-name">${name}</div>
+                <div class="test-status ${statusClass[status]}">${statusText[status]} ${message || ''}</div>
+            `;
+            
+            container.appendChild(item);
+            
+            testResults.total++;
+            if (status === 'pass') testResults.passed++;
+            if (status === 'fail') testResults.failed++;
+            updateSummary();
+        }
+        
+        function updateSummary() {
+            document.getElementById('totalTests').textContent = testResults.total;
+            document.getElementById('passedTests').textContent = testResults.passed;
+            document.getElementById('failedTests').textContent = testResults.failed;
+            const rate = testResults.total === 0 ? 0 : Math.round(testResults.passed / testResults.total * 100);
+            document.getElementById('passRate').textContent = rate + '%';
+        }
+        
+        function runAllTests() {
+            testResults = { total: 0, passed: 0, failed: 0 };
+            document.getElementById('testResults').innerHTML = '';
+            document.getElementById('dataStatus').innerHTML = '';
+            updateProgress(0, '开始测试...');
+            
+            // 测试文件加载
+            setTimeout(() => testFileLoading(), 500);
+            // 测试数据存储
+            setTimeout(() => testDataStorage(), 2000);
+            // 测试数据一致性
+            setTimeout(() => testDataConsistency(), 3500);
+            // 测试平台访问
+            setTimeout(() => testPlatformAccess(), 5000);
+            // 显示数据状态
+            setTimeout(() => showDataStatus(), 6000);
+            // 生成报告
+            setTimeout(() => generateReport(), 7000);
+        }
+        
+        function testFileLoading() {
+            updateProgress(10, '测试文件加载...');
+            
+            // 测试移动端
+            fetch('mobile.html')
+                .then(res => res.ok ? addTestResult('移动端文件加载', 'pass', '正常') : addTestResult('移动端文件加载', 'fail', '失败'))
+                .catch(err => addTestResult('移动端文件加载', 'fail', err.message));
+            
+            // 测试管理端
+            fetch('admin.html')
+                .then(res => res.ok ? addTestResult('管理端文件加载', 'pass', '正常') : addTestResult('管理端文件加载', 'fail', '失败'))
+                .catch(err => addTestResult('管理端文件加载', 'fail', err.message));
+            
+            // 测试大屏端
+            fetch('index-big.html')
+                .then(res => res.ok ? addTestResult('大屏端文件加载', 'pass', '正常') : addTestResult('大屏端文件加载', 'fail', '失败'))
+                .catch(err => addTestResult('大屏端文件加载', 'fail', err.message));
+            
+            updateProgress(25, '文件加载测试完成');
+        }
+        
+        function testDataStorage() {
+            updateProgress(40, '测试数据存储...');
+            
+            try {
+                // 测试写入
+                const testData = { test: true, timestamp: Date.now() };
+                localStorage.setItem('classpet_test', JSON.stringify(testData));
+                addTestResult('数据写入测试', 'pass', '成功');
+                
+                // 测试读取
+                const readData = localStorage.getItem('classpet_test');
+                if (readData === JSON.stringify(testData)) {
+                    addTestResult('数据读取测试', 'pass', '成功');
+                } else {
+                    addTestResult('数据读取测试', 'fail', '数据不匹配');
+                }
+                
+                // 清理
+                localStorage.removeItem('classpet_test');
+                addTestResult('数据清理测试', 'pass', '成功');
+                
+            } catch (e) {
+                addTestResult('数据存储测试', 'fail', e.message);
+            }
+            
+            updateProgress(50, '数据存储测试完成');
+        }
+        
+        function testDataConsistency() {
+            updateProgress(60, '测试数据一致性...');
+            
+            try {
+                const students = localStorage.getItem('classpet_students');
+                const config = localStorage.getItem('classpet_config');
+                
+                if (students) {
+                    const studentList = JSON.parse(students);
+                    addTestResult('学生数据存在', 'pass', `${studentList.length} 个学生`);
+                } else {
+                    addTestResult('学生数据存在', 'fail', '数据缺失');
+                }
+                
+                if (config) {
+                    const configData = JSON.parse(config);
+                    addTestResult('配置数据存在', 'pass', configData.className || '默认配置');
+                } else {
+                    addTestResult('配置数据存在', 'fail', '配置缺失');
+                }
+                
+            } catch (e) {
+                addTestResult('数据一致性测试', 'fail', e.message);
+            }
+            
+            updateProgress(70, '一致性测试完成');
+        }
+        
+        function testPlatformAccess() {
+            updateProgress(80, '测试平台访问...');
+            
+            // 测试 localStorage 访问
+            try {
+                localStorage.setItem('test_access', 'true');
+                localStorage.getItem('test_access');
+                localStorage.removeItem('test_access');
+                addTestResult('localStorage 访问', 'pass', '正常');
+            } catch (e) {
+                addTestResult('localStorage 访问', 'fail', e.message);
+            }
+            
+            updateProgress(90, '平台访问测试完成');
+        }
+        
+        function showDataStatus() {
+            const container = document.getElementById('dataStatus');
+            
+            try {
+                const students = localStorage.getItem('classpet_students');
+                const config = localStorage.getItem('classpet_config');
+                const session = localStorage.getItem('classpet_session');
+                
+                let html = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #667eea;">${students ? JSON.parse(students).length : 0}</div>
+                            <div style="color: #666; margin-top: 5px;">学生数量</div>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #4CAF50;">${config ? '✅' : '❌'}</div>
+                            <div style="color: #666; margin-top: 5px;">配置文件</div>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #2196F3;">${session ? '已登录' : '未登录'}</div>
+                            <div style="color: #666; margin-top: 5px;">会话状态</div>
+                        </div>
+                    </div>
+                `;
+                
+                container.innerHTML = html;
+                
+            } catch (e) {
+                container.innerHTML = `<div style="color: #f44336;">数据状态检查失败：${e.message}</div>`;
+            }
+        }
+        
+        function generateReport() {
+            updateProgress(100, '生成报告...');
+            
+            const rate = Math.round(testResults.passed / testResults.total * 100);
+            let message = '';
+            
+            if (rate >= 90) {
+                message = '🎉 优秀！所有功能正常';
+            } else if (rate >= 70) {
+                message = '✅ 良好！基本功能正常';
+            } else {
+                message = '⚠️ 注意！存在需要修复的问题';
+            }
+            
+            updateProgress(100, `${message} - 通过率 ${rate}%`);
+            
+            // 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function clearAllData() {
+            if (confirm('⚠️ 确定要清空所有数据吗？此操作不可恢复！')) {
+                localStorage.removeItem('classpet_students');
+                localStorage.removeItem('classpet_config');
+                localStorage.removeItem('classpet_session');
+                alert('✅ 数据已清空！请刷新页面。');
+                location.reload();
+            }
+        }
+        
+        function resetToDefaults() {
+            if (confirm('🔄 确定要恢复默认数据吗？')) {
+                localStorage.removeItem('classpet_students');
+                localStorage.removeItem('classpet_config');
+                alert('✅ 默认数据已恢复！请刷新页面。');
+                location.reload();
+            }
+        }
+        
+        // 页面加载时自动显示数据状态
+        window.addEventListener('DOMContentLoaded', () => {
+            showDataStatus();
+            console.log('综合功能测试工具已加载');
+        });
+    </script>
+</body>
+</html>

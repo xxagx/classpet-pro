@@ -1,0 +1,193 @@
+/* ClassPet Pro - 图片编辑器样式 */
+
+/* 图片编辑器容器 */
+.image-editor-container {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* 编辑器工具栏 */
+.editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.tool-btn {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tool-btn:hover {
+    background: #e9ecef;
+    border-color: #667eea;
+}
+
+.tool-btn:active {
+    background: #dee2e6;
+    transform: translateY(1px);
+}
+
+/* 画布容器 */
+.editor-canvas-container {
+    position: relative;
+    margin-bottom: 20px;
+    border: 2px solid #f0f0f0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f8f9fa;
+}
+
+#editorCanvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    cursor: move;
+}
+
+/* 裁剪覆盖层 */
+.crop-overlay {
+    position: absolute;
+    border: 2px dashed #667eea;
+    background: rgba(102, 126, 234, 0.1);
+    cursor: move;
+    z-index: 10;
+}
+
+.crop-handle {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #667eea;
+    border: 2px solid white;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.crop-handle.top-left {
+    top: -6px;
+    left: -6px;
+    cursor: nw-resize;
+}
+
+.crop-handle.top-right {
+    top: -6px;
+    right: -6px;
+    cursor: ne-resize;
+}
+
+.crop-handle.bottom-left {
+    bottom: -6px;
+    left: -6px;
+    cursor: sw-resize;
+}
+
+.crop-handle.bottom-right {
+    bottom: -6px;
+    right: -6px;
+    cursor: se-resize;
+}
+
+/* 编辑器操作按钮 */
+.editor-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.editor-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-secondary {
+    background: #f0f0f0;
+    color: #666;
+}
+
+.btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #e0e0e0;
+}
+
+.btn-primary:hover {
+    background: #5a6fd8;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .image-editor-container {
+        padding: 15px;
+        margin: 10px;
+    }
+    
+    .editor-toolbar {
+        gap: 6px;
+    }
+    
+    .tool-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    
+    .editor-actions {
+        flex-direction: column;
+    }
+    
+    .editor-actions button {
+        width: 100%;
+    }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.image-editor-container {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* 加载状态 */
+.editor-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    color: #666;
+    font-size: 16px;
+}
+
+.editor-loading::before {
+    content: "🔄";
+    margin-right: 8px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

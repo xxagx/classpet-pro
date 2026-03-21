@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassPet Pro - 快速部署工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .card h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-content h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .step-content p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-success {
+            background: #4CAF50;
+        }
+        
+        .btn-success:hover {
+            background: #45a049;
+        }
+        
+        .btn-github {
+            background: #333;
+        }
+        
+        .btn-github:hover {
+            background: #555;
+        }
+        
+        .input-group {
+            margin: 20px 0;
+        }
+        
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .qr-container {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        #qrcode {
+            display: inline-block;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .platform-card {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .platform {
+            flex: 1;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .platform:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .platform h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .platform p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .platform .price {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .features {
+            list-style: none;
+            text-align: left;
+            margin-top: 15px;
+        }
+        
+        .features li {
+            padding: 5px 0;
+            font-size: 14px;
+        }
+        
+        .features li:before {
+            content: "✓ ";
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .alert {
+            padding: 15px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .alert strong {
+            color: #856404;
+        }
+        
+        .alert p {
+            color: #856404;
+            margin: 5px 0;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        
+        .checklist {
+            list-style: none;
+        }
+        
+        .checklist li {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .checklist li:before {
+            content: "☐";
+            font-size: 20px;
+            color: #667eea;
+        }
+        
+        .checklist li.done:before {
+            content: "✓";
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 ClassPet Pro 快速部署工具</h1>
+            <p>5 分钟上线，让全球用户都能访问您的系统</p>
+        </div>
+        
+        <!-- 部署平台选择 -->
+        <div class="card">
+            <h2><span>🎯</span> 选择部署平台</h2>
+            <div class="platform-card">
+                <div class="platform" onclick="selectPlatform('vercel')">
+                    <h3>Vercel</h3>
+                    <div class="price">免费</div>
+                    <ul class="features">
+                        <li>一键部署</li>
+                        <li>自动 HTTPS</li>
+                        <li>全球 CDN 加速</li>
+                        <li>100GB/月流量</li>
+                        <li>无需备案</li>
+                    </ul>
+                    <button class="btn btn-success" style="margin-top: 15px;">选择此平台</button>
+                </div>
+                
+                <div class="platform" onclick="selectPlatform('netlify')">
+                    <h3>Netlify</h3>
+                    <div class="price">免费</div>
+                    <ul class="features">
+                        <li>拖拽上传</li>
+                        <li>自动 HTTPS</li>
+                        <li>全球 CDN 加速</li>
+                        <li>100GB/月流量</li>
+                        <li>无需备案</li>
+                    </ul>
+                    <button class="btn btn-success" style="margin-top: 15px;">选择此平台</button>
+                </div>
+                
+                <div class="platform" onclick="selectPlatform('github')">
+                    <h3>GitHub Pages</h3>
+                    <div class="price">免费</div>
+                    <ul class="features">
+                        <li>GitHub 原生</li>
+                        <li>免费托管</li>
+                        <li>简单易用</li>
+                        <li>适合静态网站</li>
+                        <li>无需备案</li>
+                    </ul>
+                    <button class="btn btn-success" style="margin-top: 15px;">选择此平台</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Vercel 部署步骤 -->
+        <div class="card" id="vercel-steps" style="display: none;">
+            <h2><span>⚡</span> Vercel 部署步骤（5 分钟）</h2>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>上传代码到 GitHub</h3>
+                    <p>首先需要将代码上传到 GitHub 仓库</p>
+                    <div class="input-group">
+                        <label>GitHub 仓库地址：</label>
+                        <input type="text" id="github-repo" placeholder="https://github.com/你的用户名/classpet-pro">
+                    </div>
+                    <button class="btn btn-github" onclick="openGitHub()">打开 GitHub</button>
+                    <button class="btn" onclick="checkRepo()">检查仓库</button>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>部署到 Vercel</h3>
+                    <p>使用 GitHub 账号登录 Vercel 并导入项目</p>
+                    <button class="btn" onclick="openVercel()">打开 Vercel</button>
+                    <div class="alert" style="margin-top: 10px;">
+                        <strong>提示：</strong>登录后点击 "Add New Project" → 选择你的仓库 → 点击 "Deploy"
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>获取访问链接</h3>
+                    <p>部署完成后，您会获得一个免费域名</p>
+                    <div class="input-group">
+                        <label>您的 Vercel 域名：</label>
+                        <input type="text" id="vercel-url" placeholder="https://classpet-pro-xxx.vercel.app">
+                    </div>
+                    <button class="btn btn-success" onclick="generateQR()">生成二维码</button>
+                    <button class="btn" onclick="testAccess()">测试访问</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Netlify 部署步骤 -->
+        <div class="card" id="netlify-steps" style="display: none;">
+            <h2><span>⚡</span> Netlify 部署步骤（3 分钟）</h2>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>打开 Netlify</h3>
+                    <p>访问 Netlify 官网并注册账号</p>
+                    <button class="btn" onclick="openNetlify()">打开 Netlify</button>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>拖拽上传</h3>
+                    <p>将整个项目文件夹拖入 Netlify 上传区域</p>
+                    <div class="alert">
+                        <strong>文件夹位置：</strong><br>
+                        <code>c:\Users\贝贝\Desktop\classpet-pro1.0-main (1)\classpet-pro1.0-main\classpet-pro-for-codebuddy</code>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>获取访问链接</h3>
+                    <p>上传完成后获得免费域名</p>
+                    <div class="input-group">
+                        <label>您的 Netlify 域名：</label>
+                        <input type="text" id="netlify-url" placeholder="https://xxx-xxx-xxx.netlify.app">
+                    </div>
+                    <button class="btn btn-success" onclick="generateQR()">生成二维码</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- GitHub Pages 部署步骤 -->
+        <div class="card" id="github-steps" style="display: none;">
+            <h2><span>⚡</span> GitHub Pages 部署步骤（5 分钟）</h2>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>创建 GitHub 仓库</h3>
+                    <p>创建名为 `你的用户名.github.io` 的仓库</p>
+                    <button class="btn btn-github" onclick="openGitHub()">创建仓库</button>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>上传代码</h3>
+                    <p>将所有文件上传到仓库</p>
+                    <div class="code-block">
+git init<br>
+git add .<br>
+git commit -m "Initial commit"<br>
+git push -u origin main
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>启用 Pages</h3>
+                    <p>Settings → Pages → 选择 main branch → Save</p>
+                    <div class="input-group">
+                        <label>您的 GitHub Pages 域名：</label>
+                        <input type="text" id="github-pages-url" placeholder="https://你的用户名.github.io">
+                    </div>
+                    <button class="btn btn-success" onclick="generateQR()">生成二维码</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 二维码生成 -->
+        <div class="card" id="qr-card" style="display: none;">
+            <h2><span>📱</span> 生成访问二维码</h2>
+            <div class="input-group">
+                <label>输入访问地址：</label>
+                <input type="text" id="qr-url" placeholder="https://your-site.vercel.app">
+            </div>
+            <button class="btn btn-success" onclick="generateQR()">生成二维码</button>
+            
+            <div class="qr-container" id="qr-container" style="display: none;">
+                <div id="qrcode"></div>
+                <p style="margin-top: 15px; color: #666;">扫描二维码即可访问系统</p>
+                <button class="btn" onclick="downloadQR()">下载二维码</button>
+            </div>
+        </div>
+        
+        <!-- 部署检查清单 -->
+        <div class="card">
+            <h2><span>✅</span> 部署检查清单</h2>
+            <ul class="checklist" id="checklist">
+                <li>选择部署平台</li>
+                <li>注册账号</li>
+                <li>上传代码</li>
+                <li>等待部署完成</li>
+                <li>测试访问链接</li>
+                <li>生成二维码</li>
+                <li>分享给学生</li>
+            </ul>
+        </div>
+        
+        <!-- 注意事项 -->
+        <div class="card">
+            <h2><span>⚠️</span> 重要提示</h2>
+            <div class="alert">
+                <strong>数据存储说明：</strong>
+                <p>• 当前版本使用 localStorage 存储数据</p>
+                <p>• 数据保存在用户浏览器本地</p>
+                <p>• 清除浏览器缓存会丢失数据</p>
+                <p>• 建议定期在教师端导出数据备份</p>
+            </div>
+            
+            <div class="alert">
+                <strong>访问优化：</strong>
+                <p>• Vercel/Netlify 是境外服务器，国内访问可能稍慢</p>
+                <p>• 建议生成二维码让学生扫码访问</p>
+                <p>• 可以绑定自定义域名提升访问速度</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script>
+        let selectedPlatform = '';
+        
+        function selectPlatform(platform) {
+            selectedPlatform = platform;
+            
+            // 隐藏所有步骤
+            document.getElementById('vercel-steps').style.display = 'none';
+            document.getElementById('netlify-steps').style.display = 'none';
+            document.getElementById('github-steps').style.display = 'none';
+            
+            // 显示对应平台的步骤
+            document.getElementById(platform + '-steps').style.display = 'block';
+            
+            // 滚动到步骤区域
+            document.getElementById(platform + '-steps').scrollIntoView({ behavior: 'smooth' });
+            
+            // 更新检查清单
+            updateChecklist(platform);
+        }
+        
+        function updateChecklist(platform) {
+            const checklist = document.getElementById('checklist');
+            checklist.innerHTML = `
+                <li class="done">选择部署平台 (${platform})</li>
+                <li>注册${platform}账号</li>
+                <li>上传代码</li>
+                <li>等待部署完成</li>
+                <li>测试访问链接</li>
+                <li>生成二维码</li>
+                <li>分享给学生</li>
+            `;
+        }
+        
+        function openGitHub() {
+            window.open('https://github.com', '_blank');
+        }
+        
+        function openVercel() {
+            window.open('https://vercel.com', '_blank');
+        }
+        
+        function openNetlify() {
+            window.open('https://netlify.com', '_blank');
+        }
+        
+        function checkRepo() {
+            const repo = document.getElementById('github-repo').value;
+            if (repo) {
+                alert('请确保仓库已创建并上传了代码！');
+            } else {
+                alert('请先输入 GitHub 仓库地址');
+            }
+        }
+        
+        function generateQR() {
+            let url = '';
+            
+            if (selectedPlatform === 'vercel') {
+                url = document.getElementById('vercel-url').value;
+            } else if (selectedPlatform === 'netlify') {
+                url = document.getElementById('netlify-url').value;
+            } else if (selectedPlatform === 'github') {
+                url = document.getElementById('github-pages-url').value;
+            }
+            
+            if (!url) {
+                alert('请先输入访问地址');
+                return;
+            }
+            
+            // 显示二维码容器
+            document.getElementById('qr-card').style.display = 'block';
+            document.getElementById('qr-container').style.display = 'block';
+            
+            // 生成二维码
+            const qrContainer = document.getElementById('qrcode');
+            qrContainer.innerHTML = '';
+            
+            new QRCode(qrContainer, {
+                text: url,
+                width: 256,
+                height: 256,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            // 滚动到二维码区域
+            document.getElementById('qr-card').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function downloadQR() {
+            const qrImage = document.querySelector('#qrcode img');
+            if (qrImage) {
+                const link = document.createElement('a');
+                link.download = 'classpet-pro-qr.png';
+                link.href = qrImage.src;
+                link.click();
+            }
+        }
+        
+        function testAccess() {
+            const url = document.getElementById('vercel-url').value;
+            if (url) {
+                window.open(url, '_blank');
+            } else {
+                alert('请先输入访问地址');
+            }
+        }
+        
+        // 页面加载完成
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('部署工具已就绪');
+        });
+    </script>
+</body>
+</html>

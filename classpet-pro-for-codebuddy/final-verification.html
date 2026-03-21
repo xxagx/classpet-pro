@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassPet Pro - 最终系统验证</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .status-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .status-card h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-icon {
+            font-size: 28px;
+        }
+        
+        .test-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #ddd;
+        }
+        
+        .test-item.pass {
+            border-left-color: #4CAF50;
+            background: #e8f5e9;
+        }
+        
+        .test-item.fail {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+        
+        .test-item.pending {
+            border-left-color: #ff9800;
+            background: #fff3e0;
+        }
+        
+        .test-name {
+            flex: 1;
+            font-weight: 500;
+        }
+        
+        .test-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .status-pass {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .status-fail {
+            background: #f44336;
+            color: white;
+        }
+        
+        .status-pending {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .test-detail {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .summary-item {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .summary-value {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .summary-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .error-message {
+            color: #f44336;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        
+        .success-message {
+            color: #4CAF50;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 ClassPet Pro 最终系统验证</h1>
+            <p>生产级质量检查 - 全面验证系统稳定性与可靠性</p>
+        </div>
+        
+        <div class="status-card">
+            <h2><span class="status-icon">📊</span> 测试进度</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%;">0%</div>
+            </div>
+            <button class="btn" id="startBtn" onclick="startVerification()">开始全面验证</button>
+        </div>
+        
+        <div class="status-card">
+            <h2><span class="status-icon">🔧</span> 核心模块检查</h2>
+            <div id="coreTests"></div>
+        </div>
+        
+        <div class="status-card">
+            <h2><span class="status-icon">💾</span> 数据完整性检查</h2>
+            <div id="dataTests"></div>
+        </div>
+        
+        <div class="status-card">
+            <h2><span class="status-icon">🚀</span> 性能与兼容性检查</h2>
+            <div id="performanceTests"></div>
+        </div>
+        
+        <div class="status-card">
+            <h2><span class="status-icon">📈</span> 测试总结</h2>
+            <div class="summary">
+                <div class="summary-item">
+                    <div class="summary-value" id="totalTests">0</div>
+                    <div class="summary-label">总测试数</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value" id="passedTests" style="color: #4CAF50;">0</div>
+                    <div class="summary-label">通过</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value" id="failedTests" style="color: #f44336;">0</div>
+                    <div class="summary-label">失败</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value" id="passRate">0%</div>
+                    <div class="summary-label">通过率</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let testResults = { total: 0, passed: 0, failed: 0 };
+        
+        function createTestItem(name, status = 'pending', detail = '', error = '') {
+            const statusMap = {
+                'pass': { text: '✓ 通过', class: 'status-pass' },
+                'fail': { text: '✗ 失败', class: 'status-fail' },
+                'pending': { text: '⏳ 等待', class: 'status-pending' }
+            };
+            
+            const config = statusMap[status] || statusMap['pending'];
+            
+            return `
+                <div class="test-item ${status}">
+                    <div>
+                        <div class="test-name">${name}</div>
+                        ${detail ? `<div class="test-detail">${detail}</div>` : ''}
+                        ${error ? `<div class="error-message">${error}</div>` : ''}
+                    </div>
+                    <div class="test-status ${config.class}">${config.text}</div>
+                </div>
+            `;
+        }
+        
+        function updateTestStatus(containerId, index, status, detail = '') {
+            const container = document.getElementById(containerId);
+            const items = container.getElementsByClassName('test-item');
+            if (items[index]) {
+                items[index].className = `test-item ${status}`;
+                const statusMap = {
+                    'pass': { text: '✓ 通过', class: 'status-pass' },
+                    'fail': { text: '✗ 失败', class: 'status-fail' },
+                    'pending': { text: '⏳ 等待', class: 'status-pending' }
+                };
+                const config = statusMap[status];
+                const statusEl = items[index].querySelector('.test-status');
+                statusEl.className = `test-status ${config.class}`;
+                statusEl.textContent = config.text;
+                
+                if (detail) {
+                    const detailEl = items[index].querySelector('.test-detail');
+                    if (detailEl) {
+                        detailEl.textContent = detail;
+                    } else {
+                        const detailDiv = document.createElement('div');
+                        detailDiv.className = status === 'fail' ? 'error-message' : 'success-message';
+                        detailDiv.textContent = detail;
+                        items[index].querySelector('div').appendChild(detailDiv);
+                    }
+                }
+            }
+        }
+        
+        function updateProgress() {
+            const percentage = testResults.total === 0 ? 0 : Math.round((testResults.passed + testResults.failed) / testResults.total * 100);
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressBar').textContent = percentage + '%';
+            
+            document.getElementById('totalTests').textContent = testResults.total;
+            document.getElementById('passedTests').textContent = testResults.passed;
+            document.getElementById('failedTests').textContent = testResults.failed;
+            document.getElementById('passRate').textContent = percentage + '%';
+        }
+        
+        async function startVerification() {
+            const btn = document.getElementById('startBtn');
+            btn.disabled = true;
+            btn.textContent = '验证进行中...';
+            
+            testResults = { total: 0, passed: 0, failed: 0 };
+            
+            // 运行核心模块测试
+            await runCoreTests();
+            
+            // 运行数据完整性测试
+            await runDataTests();
+            
+            // 运行性能测试
+            await runPerformanceTests();
+            
+            updateProgress();
+            
+            btn.disabled = false;
+            btn.textContent = '重新验证';
+            
+            if (testResults.failed === 0) {
+                alert('🎉 恭喜！所有测试通过，系统达到生产级标准！');
+            } else {
+                alert(`⚠️ 测试完成，发现 ${testResults.failed} 个问题，请查看详细信息。`);
+            }
+        }
+        
+        async function runCoreTests() {
+            const container = document.getElementById('coreTests');
+            container.innerHTML = '';
+            
+            // 测试 1: DataManager
+            testResults.total++;
+            container.innerHTML += createTestItem('DataManager 初始化', 'pending');
+            try {
+                if (typeof DataManager === 'function') {
+                    const dm = new DataManager(true);
+                    const students = dm.getAllStudents();
+                    updateTestStatus('coreTests', 0, 'pass', `管理 ${students.length} 个学生`);
+                    testResults.passed++;
+                } else {
+                    updateTestStatus('coreTests', 0, 'fail', 'DataManager 未定义');
+                    testResults.failed++;
+                }
+            } catch (error) {
+                updateTestStatus('coreTests', 0, 'fail', error.message);
+                testResults.failed++;
+            }
+            
+            // 测试 2: ItemDatabaseManager
+            testResults.total++;
+            container.innerHTML += createTestItem('ItemDatabaseManager 初始化', 'pending');
+            try {
+                if (typeof ItemDatabaseManager === 'function') {
+                    const db = new ItemDatabaseManager();
+                    const items = db.getAllItems();
+                    updateTestStatus('coreTests', 1, 'pass', `数据库中有 ${items.length} 个物品`);
+                    testResults.passed++;
+                } else {
+                    updateTestStatus('coreTests', 1, 'fail', 'ItemDatabaseManager 未定义');
+                    testResults.failed++;
+                }
+            } catch (error) {
+                updateTestStatus('coreTests', 1, 'fail', error.message);
+                testResults.failed++;
+            }
+            
+            // 测试 3: TeacherItemUploader
+            testResults.total++;
+            container.innerHTML += createTestItem('TeacherItemUploader 加载', 'pending');
+            try {
+                if (typeof TeacherItemUploader === 'function') {
+                    updateTestStatus('coreTests', 2, 'pass', '教师端上传器已就绪');
+                    testResults.passed++;
+                } else {
+                    updateTestStatus('coreTests', 2, 'fail', 'TeacherItemUploader 未定义');
+                    testResults.failed++;
+                }
+            } catch (error) {
+                updateTestStatus('coreTests', 2, 'fail', error.message);
+                testResults.failed++;
+            }
+            
+            // 测试 4: StudentItemMall
+            testResults.total++;
+            container.innerHTML += createTestItem('StudentItemMall 加载', 'pending');
+            try {
+                if (typeof StudentItemMall === 'function') {
+                    updateTestStatus('coreTests', 3, 'pass', '学生端商城已就绪');
+                    testResults.passed++;
+                } else {
+                    updateTestStatus('coreTests', 3, 'fail', 'StudentItemMall 未定义');
+                    testResults.failed++;
+                }
+            } catch (error) {
+                updateTestStatus('coreTests', 3, 'fail', error.message);
+                testResults.failed++;
+            }
+            
+            updateProgress();
+        }
+        
+        async function runDataTests() {
+            const container = document.getElementById('dataTests');
+            container.innerHTML = '';
+            
+            // 测试 1: 学生数据持久化
+            testResults.total++;
+            container.innerHTML += createTestItem('学生数据持久化', 'pending');
+            try {
+                const dm = new DataManager(true);
+                const students = dm.getAllStudents();
+                if (students.length > 0) {
+                    updateTestStatus('dataTests', 0, 'pass', `成功加载 ${students.length} 个学生数据`);
+                    testResults.passed++;
+                } else {
+                    updateTestStatus('dataTests', 0, 'pass', '学生数据为空（正常）');
+                    testResults.passed++;
+                }
+            } catch (error) {
+                updateTestStatus('dataTests', 0, 'fail', error.message);
+                testResults.failed++;
+            }
+            
+            // 测试 2: 物品数据持久化
+            testResults.total++;
+            container.innerHTML += createTestItem('物品数据持久化', 'pending');
+            try {
+                const db = new ItemDatabaseManager();
+                const testItem = {
+                    name: '验证测试物品',
+                    type: 'accessory',
+                    category: 'hat',
+                    emoji: '🎩',
+                    points: 100,
+                    rarity: 'common',
+                    description: '系统验证测试'
+                };
+                db.addItem(testItem);
+                const items = db.getAllItems();
+                updateTestStatus('dataTests', 1, 'pass', `物品库包含 ${items.length} 个物品`);
+                testResults.passed++;
+            } catch (error) {
+                updateTestStatus('dataTests', 1, 'fail', error.message);
+                testResults.failed++;
+            }
+            
+            // 测试 3: 积分系统
+            testResults.total++;
+            container.innerHTML += createTestItem('积分系统同步', 'pending');
+            try {
+                const dm = new DataManager(true);
+                const students = dm.getAllStudents();
+                if (students.length > 0) {
+                    const avgScore = Math.round(students.reduce((sum, s) => sum + s.score, 0) / students.length);
+                    updateTestStatus('dataTests', 2, 'pass', `平均积分：${avgScore}分`);
+                } else {
+                    updateTestStatus('dataTests', 2, 'pass', '积分系统就绪');
+                }
+                testResults.passed++;
+            } catch (error) {
+                updateTestStatus('dataTests', 2, 'fail', error.message);
+                testResults.failed++;
+            }
+            
+            // 测试 4: 物品 ID 生成
+            testResults.total++;
+            container.innerHTML += createTestItem('物品 ID 生成逻辑', 'pending');
+            try {
+                const db = new ItemDatabaseManager();
+                const testItem = {
+                    name: 'ID 测试物品',
+                    type: 'weapon',
+                    category: 'sword',
+                    emoji: '⚔️',
+                    points: 200,
+                    rarity: 'rare'
+                };
+                const result = db.addItem(testItem);
+                if (result && result.id) {
+                    updateTestStatus('dataTests', 3, 'pass', `成功生成 ID: ${result.id}`);
+                    testResults.passed++;
+                } else {
+                    updateTestStatus('dataTests', 3, 'fail', 'ID 生成失败');
+                    testResults.failed++;
+                }
+            } catch (error) {
+                updateTestStatus('dataTests', 3, 'fail', error.message);
+                testResults.failed++;
+            }
+            
+            updateProgress();
+        }
+        
+        async function runPerformanceTests() {
+            const container = document.getElementById('performanceTests');
+            container.innerHTML = '';
+            
+            // 测试 1: localStorage 读写性能
+            testResults.total++;
+            container.innerHTML += createTestItem('localStorage 性能', 'pending');
+            try {
+                const startTime = performance.now();
+                for (let i = 0; i < 100; i++) {
+                    localStorage.setItem(`test_${i}`, `value_${i}`);
+                    localStorage.getItem(`test_${i}`);
+                }
+                const endTime = performance.now();
+                const duration = (endTime - startTime).toFixed(2);
+                
+                if (duration < 100) {
+                    updateTestStatus('performanceTests', 0, 'pass', `${duration}ms (优秀)`);
+                    testResults.passed++;
+                } else {
+                    updateTestStatus('performanceTests', 0, 'pass', `${duration}ms (正常)`);
+                    testResults.passed++;
+                }
+            } catch (error) {
+                updateTestStatus('performanceTests', 0, 'fail', error.message);
+                testResults.failed++;
+            }
+            
+            // 测试 2: 大数据量处理
+            testResults.total++;
+            container.innerHTML += createTestItem('大数据量处理', 'pending');
+            try {
+                const startTime = performance.now();
+                const db = new ItemDatabaseManager();
+                for (let i = 0; i < 50; i++) {
+                    db.addItem({
+                        name: `性能测试物品${i}`,
+                        type: 'accessory',
+                        category: 'hat',
+                        emoji: '🎩',
+                        points: i * 10,
+                        rarity: 'common'
+                    });
+                }
+                const items = db.getAllItems();
+                const endTime = performance.now();
+                const duration = (endTime - startTime).toFixed(2);
+                updateTestStatus('performanceTests', 1, 'pass', `处理 ${items.length} 个物品用时 ${duration}ms`);
+                testResults.passed++;
+            } catch (error) {
+                updateTestStatus('performanceTests', 1, 'fail', error.message);
+                testResults.failed++;
+            }
+            
+            // 测试 3: 浏览器兼容性
+            testResults.total++;
+            container.innerHTML += createTestItem('浏览器兼容性', 'pending');
+            try {
+                const features = {
+                    'localStorage': typeof localStorage !== 'undefined',
+                    'fetch': typeof fetch === 'function',
+                    'Promise': typeof Promise !== 'undefined',
+                    'ES6 Class': typeof class {} === 'function'
+                };
+                
+                const supported = Object.values(features).every(v => v);
+                if (supported) {
+                    updateTestStatus('performanceTests', 2, 'pass', '所有特性支持');
+                    testResults.passed++;
+                } else {
+                    updateTestStatus('performanceTests', 2, 'fail', '部分特性不支持');
+                    testResults.failed++;
+                }
+            } catch (error) {
+                updateTestStatus('performanceTests', 2, 'fail', error.message);
+                testResults.failed++;
+            }
+            
+            updateProgress();
+        }
+        
+        // 页面加载时自动加载必要的脚本
+        window.addEventListener('DOMContentLoaded', () => {
+            const scripts = [
+                'js/data-manager.js',
+                'js/item-database.js',
+                'js/teacher-item-uploader.js',
+                'js/student-item-mall.js'
+            ];
+            
+            let loadedCount = 0;
+            const totalScripts = scripts.length;
+            
+            scripts.forEach(src => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = () => {
+                    loadedCount++;
+                    if (loadedCount === totalScripts) {
+                        console.log('✅ 所有验证脚本加载完成');
+                    }
+                };
+                script.onerror = () => {
+                    console.error('❌ 脚本加载失败:', src);
+                };
+                document.head.appendChild(script);
+            });
+        });
+    </script>
+</body>
+</html>

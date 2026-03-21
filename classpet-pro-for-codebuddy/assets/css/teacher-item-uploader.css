@@ -1,0 +1,574 @@
+/* ClassPet Pro - 教师端物品上传系统样式 */
+
+/* ==================== 卡通风格背景 ==================== */
+body {
+    /* 卡通风格浅色背景 - 使用 CSS 渐变和图案 */
+    background-color: #FFF9E6;
+    background-image: 
+        /* 小圆点图案 */
+        radial-gradient(circle at 25% 25%, rgba(255, 183, 178, 0.4) 2%, transparent 2.5%),
+        radial-gradient(circle at 75% 75%, rgba(255, 215, 105, 0.4) 2%, transparent 2.5%),
+        radial-gradient(circle at 50% 50%, rgba(179, 235, 255, 0.4) 1.5%, transparent 2%),
+        /* 柔和的渐变底色 */
+        linear-gradient(135deg, #FFF9E6 0%, #FFF3D0 50%, #FFE6F0 100%);
+    background-size: 60px 60px, 80px 80px, 40px 40px, 100% 100%;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+/* ==================== 上传容器 ==================== */
+.teacher-uploader {
+    background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(255,255,255,0.75));
+    border-radius: 20px;
+    padding: 30px;
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 3px solid rgba(255, 183, 178, 0.5);
+    box-shadow: 
+        0 8px 32px rgba(255, 183, 178, 0.3),
+        inset 0 2px 10px rgba(255, 255, 255, 0.8);
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 容器装饰元素 - 卡通角标 */
+.teacher-uploader::before {
+    content: '🎨';
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    font-size: 40px;
+    opacity: 0.3;
+    transform: rotate(15deg);
+}
+
+.teacher-uploader::after {
+    content: '✨';
+    position: absolute;
+    bottom: -10px;
+    left: 20px;
+    font-size: 30px;
+    opacity: 0.3;
+    transform: rotate(-15deg);
+}
+
+.uploader-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.uploader-header h2 {
+    font-size: 32px;
+    color: #FF6B9D;
+    text-shadow: 0 0 10px rgba(255, 107, 157, 0.3);
+    margin: 0;
+    font-weight: 700;
+}
+
+.item-count {
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8));
+    padding: 15px 25px;
+    border-radius: 15px;
+    font-size: 16px;
+    color: #333;
+    border: 2px solid rgba(255, 183, 178, 0.5);
+    box-shadow: 0 4px 15px rgba(255, 183, 178, 0.2);
+}
+
+.item-count span {
+    font-size: 20px;
+    font-weight: bold;
+    color: #FF6B9D;
+}
+
+/* ==================== 类型选择器 ==================== */
+.item-type-selector {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.type-btn {
+    padding: 15px 30px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8));
+    border: 2px solid rgba(255, 183, 178, 0.5);
+    border-radius: 15px;
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 183, 178, 0.2);
+}
+
+.type-btn:hover {
+    background: linear-gradient(135deg, rgba(255,255,255,1), rgba(255,230,240,0.9));
+    border-color: rgba(255, 107, 157, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 157, 0.3);
+}
+
+.type-btn.active {
+    background: linear-gradient(135deg, #FF6B9D, #FF85A2);
+    border-color: #FF6B9D;
+    color: white;
+    box-shadow: 0 5px 20px rgba(255, 107, 157, 0.5);
+}
+
+/* ==================== 上传表单 ==================== */
+.upload-form-container {
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,249,230,0.85));
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    border: 2px dashed rgba(255, 183, 178, 0.6);
+    box-shadow: 0 4px 15px rgba(255, 183, 178, 0.2);
+}
+
+.upload-form {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-section {
+    background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 2px solid rgba(255, 215, 105, 0.4);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.form-section h3 {
+    font-size: 20px;
+    color: #FF6B9D;
+    margin-bottom: 15px;
+    text-shadow: 0 0 3px rgba(255, 107, 157, 0.3);
+    font-weight: 700;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255,255,255,0.95);
+    border: 2px solid rgba(255, 183, 178, 0.5);
+    border-radius: 8px;
+    color: #333;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #FF6B9D;
+    background: rgba(255,255,255,1);
+    box-shadow: 0 0 10px rgba(255, 107, 157, 0.3);
+}
+
+.form-group input[type="color"] {
+    width: 100%;
+    height: 50px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* 修复下拉选择框选项文字颜色 */
+.form-group select option {
+    background: #FFF9E6;
+    color: #333 !important;
+    padding: 10px;
+}
+
+.form-group select option:hover {
+    background: #FFE6F0;
+}
+
+.form-group select option:checked {
+    background: #FFD700;
+    color: #1e3c72 !important;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* ==================== 图片上传 ==================== */
+.image-upload-area {
+    border: 2px dashed rgba(255, 183, 178, 0.6);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    background: rgba(255,255,255,0.8);
+}
+
+.image-upload-area:hover {
+    border-color: rgba(255, 107, 157, 0.8);
+    background: rgba(255, 230, 240, 0.6);
+}
+
+.image-input {
+    display: block;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.image-preview {
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.8);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 2px solid rgba(255, 183, 178, 0.3);
+}
+
+.preview-placeholder {
+    color: #999;
+    font-size: 14px;
+}
+
+.preview-img,
+.item-custom-image {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.btn-remove-image {
+    padding: 8px 20px;
+    background: rgba(231,76,60,0.8);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-remove-image:hover {
+    background: rgba(231,76,60,1);
+}
+
+/* ==================== 表单操作按钮 ==================== */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.btn-upload,
+.btn-reset {
+    padding: 15px 40px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-upload {
+    background: linear-gradient(135deg, #FF6B9D, #FF85A2);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+}
+
+.btn-upload:hover {
+    background: linear-gradient(135deg, #FF85A2, #FF6B9D);
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(255, 107, 157, 0.5);
+}
+
+.btn-reset {
+    background: linear-gradient(135deg, #A0C4FF, #B5D4FF);
+    color: #333;
+    box-shadow: 0 4px 15px rgba(160, 196, 255, 0.3);
+}
+
+.btn-reset:hover {
+    background: linear-gradient(135deg, #B5D4FF, #A0C4FF);
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(160, 196, 255, 0.5);
+}
+
+/* ==================== 已上传物品列表 ==================== */
+.uploaded-items-section {
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,249,230,0.85));
+    border-radius: 15px;
+    padding: 30px;
+    margin-top: 30px;
+    border: 2px dashed rgba(255, 183, 178, 0.5);
+    box-shadow: 0 4px 15px rgba(255, 183, 178, 0.2);
+}
+
+.uploaded-items-section h3 {
+    font-size: 24px;
+    color: #FF6B9D;
+    margin-bottom: 20px;
+    text-shadow: 0 0 3px rgba(255, 107, 157, 0.3);
+    font-weight: 700;
+}
+
+.items-filter {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.items-filter select,
+.items-filter input {
+    padding: 10px 15px;
+    background: rgba(255,255,255,0.9);
+    border: 2px solid rgba(255, 183, 178, 0.5);
+    border-radius: 8px;
+    color: #333;
+    font-size: 14px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.items-filter select:focus,
+.items-filter input:focus {
+    outline: none;
+    border-color: #FF6B9D;
+    box-shadow: 0 0 10px rgba(255, 107, 157, 0.3);
+}
+
+.search-input {
+    flex: 1;
+    min-width: 200px;
+}
+
+.uploaded-items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.uploaded-item-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
+    border-radius: 15px;
+    padding: 15px;
+    border: 3px solid;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.uploaded-item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(255, 107, 157, 0.3);
+}
+
+/* 稀有度边框 */
+.uploaded-item-card.common {
+    border-color: #BDC3C7;
+}
+
+.uploaded-item-card.rare {
+    border-color: #5DADE2;
+}
+
+.uploaded-item-card.epic {
+    border-color: #BE85DC;
+}
+
+.uploaded-item-card.legendary {
+    border-color: #FFE082;
+    box-shadow: 0 0 20px rgba(255,215,0,0.3);
+}
+
+.uploaded-item-card.mythical {
+    border-color: #FF1493;
+    box-shadow: 0 0 20px rgba(255,105,180,0.3);
+}
+
+.item-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.item-type-badge {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+}
+
+.btn-delete-item {
+    background: linear-gradient(135deg, #FF6B9D, #FF85A2);
+    border: none;
+    border-radius: 5px;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
+}
+
+.btn-delete-item:hover {
+    background: linear-gradient(135deg, #FF85A2, #FF6B9D);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(255, 107, 157, 0.5);
+}
+
+.item-card-body {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.item-emoji-display {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 3px solid rgba(255, 183, 178, 0.5);
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.item-category {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.item-rarity {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.item-points {
+    font-size: 14px;
+    font-weight: bold;
+    color: #FF6B9D;
+    text-shadow: 0 0 3px rgba(255, 107, 157, 0.3);
+}
+
+.item-card-footer {
+    border-top: 1px solid rgba(255, 183, 178, 0.3);
+    padding-top: 10px;
+    font-size: 12px;
+    color: #999;
+}
+
+.no-items {
+    text-align: center;
+    padding: 50px;
+    color: #999;
+    font-size: 18px;
+    grid-column: 1 / -1;
+}
+
+/* ==================== 成功提示 ==================== */
+.success-toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #4CAF50, #45A049);
+    color: white;
+    padding: 20px 40px;
+    border-radius: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    box-shadow: 0 10px 50px rgba(76,175,80,0.5);
+    z-index: 10001;
+    animation: toastIn 0.5s ease, toastOut 0.5s ease 2.5s;
+}
+
+@keyframes toastIn {
+    from {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes toastOut {
+    from {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+}
+
+/* ==================== 响应式设计 ==================== */
+@media (max-width: 768px) {
+    .uploader-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .uploaded-items-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    
+    .items-filter {
+        flex-direction: column;
+    }
+    
+    .search-input {
+        width: 100%;
+    }
+}

@@ -145,6 +145,8 @@ class AdminUI {
         this.data = dataManager;
         this.feishuManager = new FeishuConfigManager(dataManager);
         this.statsManager = new StatsManager(dataManager);
+        this.studentImporter = null;
+        this.authManager = new AuthManager(dataManager);
         this.selectedStudents = new Set();
         this.currentEditId = null;
         this.init();
@@ -155,6 +157,11 @@ class AdminUI {
         this.bindEvents();
         this.updateHeaderInfo();
         this.initFeishuConfig();
+        this.initStudentImporter();
+    }
+
+    initStudentImporter() {
+        this.studentImporter = new StudentImporter(this.data, this.authManager);
     }
 
     updateHeaderInfo() {
@@ -164,9 +171,10 @@ class AdminUI {
 
     renderStudentList(searchTerm = '') {
         const list = document.getElementById('studentList');
-        const filtered = this.data.students.filter(s => 
-            s.name.includes(searchTerm)
-        );
+        const filtered = this.data.students.filter(s => {
+            const name = String(s.name || '');
+            return name.includes(searchTerm);
+        });
 
         list.innerHTML = filtered.map(student => {
             const stage = this.data.getStage(student.score);
@@ -196,26 +204,58 @@ class AdminUI {
 
     bindEvents() {
         // 搜索
-        document.getElementById('searchStudent').addEventListener('input', (e) => {
-            this.renderStudentList(e.target.value);
-        });
+        const searchStudent = document.getElementById('searchStudent');
+        if (searchStudent) {
+            searchStudent.addEventListener('input', (e) => {
+                this.renderStudentList(e.target.value);
+            });
+        }
 
         // 快捷操作
-        document.getElementById('btnAddScore').addEventListener('click', () => {
-            this.openBatchModal();
-        });
+        const btnAddScore = document.getElementById('btnAddScore');
+        if (btnAddScore) {
+            btnAddScore.addEventListener('click', () => {
+                this.openBatchModal();
+            });
+        }
 
-        document.getElementById('btnSettings').addEventListener('click', () => {
-            this.openSettingsModal();
-        });
+        const btnSettings = document.getElementById('btnSettings');
+        if (btnSettings) {
+            btnSettings.addEventListener('click', () => {
+                this.openSettingsModal();
+            });
+        }
 
-        document.getElementById('btnExport').addEventListener('click', () => {
-            this.openExportModal();
-        });
+        const btnExport = document.getElementById('btnExport');
+        if (btnExport) {
+            btnExport.addEventListener('click', () => {
+                this.openExportModal();
+            });
+        }
 
-        document.getElementById('btnAddStudent').addEventListener('click', () => {
-            this.openAddStudentModal();
-        });
+        // 物品商城管理
+        const btnItemMall = document.getElementById('btnItemMall');
+        if (btnItemMall) {
+            btnItemMall.addEventListener('click', () => {
+                this.openItemMallModal();
+            });
+        }
+
+        // 添加学生
+        const btnAddStudent = document.getElementById('btnAddStudent');
+        if (btnAddStudent) {
+            btnAddStudent.addEventListener('click', () => {
+                this.openAddStudentModal();
+            });
+        }
+
+        // 批量导入学生
+        const btnImportStudents = document.getElementById('btnImportStudents');
+        if (btnImportStudents) {
+            btnImportStudents.addEventListener('click', () => {
+                this.openImportModal();
+            });
+        }
 
         // 关闭弹窗
         document.querySelectorAll('.close-btn, .btn-secondary').forEach(btn => {
@@ -310,6 +350,7 @@ class AdminUI {
         this.currentEditId = null;
         document.getElementById('editModalTitle').textContent = '添加学生';
         document.getElementById('editName').value = '';
+        document.getElementById('editPassword').value = '';
         document.getElementById('editScore').value = '0';
         document.getElementById('editStage').textContent = '🥚 蛋';
         document.getElementById('studentEditModal').classList.add('active');
@@ -317,6 +358,7 @@ class AdminUI {
 
     saveStudentEdit() {
         const name = document.getElementById('editName').value.trim();
+        const password = document.getElementById('editPassword').value.trim();
         const score = parseInt(document.getElementById('editScore').value) || 0;
 
         if (!name) {
@@ -325,12 +367,41 @@ class AdminUI {
         }
 
         if (this.currentEditId) {
+            // 编辑现有学生
             this.data.updateStudent(this.currentEditId, { name, score });
             this.showToast('更新成功');
         } else {
-            this.data.addStudent(name);
-            this.data.updateStudent(this.data.students[this.data.students.length - 1].id, { score });
-            this.showToast('添加成功');
+            // 添加新学生，需要验证密码
+            if (!password || password.length < 4) {
+                this.showToast('密码长度至少 4 位');
+                return;
+            }
+
+            // 创建学生
+            const student = this.data.addStudent(name);
+            if (student) {
+                // 更新积分
+                this.data.updateStudent(student.id, { score });
+                
+                // 创建登录账号
+                const username = name.trim().toLowerCase();
+                const account = {
+                    id: 'acc_' + Date.now(),
+                    studentId: student.id,
+                    username: username,
+                    password: password,
+                    status: 'active',
+                    createdAt: Date.now(),
+                    createdBy: 'teacher'
+                };
+                
+                this.authManager.saveStudentAccount(account);
+                
+                this.showToast(`添加成功！\n学生姓名：${name}\n登录密码：${password}`);
+            } else {
+                this.showToast('添加失败');
+                return;
+            }
         }
 
         this.renderStudentList();
@@ -496,6 +567,25 @@ class AdminUI {
         document.getElementById('exportModal').classList.add('active');
     }
 
+    openItemMallModal() {
+        const modal = document.getElementById('itemMallModal');
+        const content = document.getElementById('itemMallContent');
+        
+        // 初始化物品上传界面
+        const uploader = new TeacherItemUploader(content, {
+            onItemAdded: (item) => {
+                console.log('物品已添加:', item);
+                this.showToast('物品已添加到商城');
+            },
+            onItemRemoved: (itemId) => {
+                console.log('物品已删除:', itemId);
+                this.showToast('物品已从商城移除');
+            }
+        });
+        
+        modal.classList.add('active');
+    }
+
     exportExcel() {
         const csv = this.data.exportToCSV();
         this.downloadFile(csv, 'classpet_data.csv', 'text/csv');
@@ -539,6 +629,21 @@ class AdminUI {
         toast.textContent = message;
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    // 打开批量导入弹窗
+    openImportModal() {
+        const modal = document.getElementById('importStudentModal');
+        const closeBtn = document.getElementById('closeImportModal');
+        
+        modal.classList.add('active');
+        
+        closeBtn.onclick = () => {
+            modal.classList.remove('active');
+        };
+        
+        // 初始化导入界面
+        this.studentImporter.createImportInterface('importContainer');
     }
 
     // 初始化飞书配置界面
@@ -619,14 +724,682 @@ class AdminUI {
     }
 }
 
+// ==================== 作业管理功能 ====================
+class HomeworkManagerUI {
+    constructor(dataManager) {
+        this.dataManager = dataManager;
+        this.homeworkManager = initHomeworkManager(dataManager);
+        this.currentReviewSubmission = null;
+        this.richTextEditor = null;
+        this.categoryManager = null;
+        this.uploader = null;
+        this.requirements = [];
+        this.init();
+    }
+
+    init() {
+        this.initRichTextEditor();
+        this.initCategoryManager();
+        this.initUploader();
+        this.initRequirementsEditor();
+        this.setupEventListeners();
+        this.setupDefaultDueDate();
+    }
+
+    initRichTextEditor() {
+        const editorContainer = document.getElementById('homeworkDescriptionEditor');
+        if (editorContainer) {
+            this.richTextEditor = new RichTextEditor('homeworkDescriptionEditor', {
+                placeholder: '请输入作业详细描述，支持富文本格式...',
+                maxHeight: 400,
+                minHeight: 150
+            });
+            this.richTextEditor.init();
+        }
+    }
+
+    initCategoryManager() {
+        this.categoryManager = new HomeworkCategoryManager();
+        this.categoryManager.createCategorySelector('categorySelector');
+    }
+
+    initUploader() {
+        const uploadContainer = document.getElementById('attachmentUpload');
+        if (uploadContainer) {
+            this.uploader = new EnhancedUploader();
+            this.uploader.initUploadComponent('attachmentUpload', {
+                maxFiles: 10,
+                maxSize: 10,
+                allowEdit: true,
+                autoSave: false
+            });
+        }
+    }
+
+    initRequirementsEditor() {
+        this.requirements = [];
+        this.renderRequirements();
+        
+        const input = document.getElementById('newRequirement');
+        const addBtn = document.getElementById('btnAddRequirement');
+        
+        if (input) {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.addRequirement();
+                }
+            });
+        }
+        
+        if (addBtn) {
+            addBtn.addEventListener('click', () => {
+                this.addRequirement();
+            });
+        }
+    }
+
+    addRequirement() {
+        const input = document.getElementById('newRequirement');
+        const text = input.value.trim();
+        
+        if (text) {
+            this.requirements.push(text);
+            this.renderRequirements();
+            input.value = '';
+        }
+    }
+
+    removeRequirement(index) {
+        this.requirements.splice(index, 1);
+        this.renderRequirements();
+    }
+
+    renderRequirements() {
+        const container = document.getElementById('requirementsList');
+        if (!container) return;
+        
+        if (this.requirements.length === 0) {
+            container.innerHTML = '<div class="no-requirements">暂无作业要求，请在下方输入框添加</div>';
+            return;
+        }
+        
+        let html = '';
+        this.requirements.forEach((req, index) => {
+            html += `
+                <div class="requirement-item">
+                    <span class="requirement-number">${index + 1}.</span>
+                    <span class="requirement-text">${req}</span>
+                    <button type="button" class="btn-remove-requirement" onclick="adminUI.homeworkUI.removeRequirement(${index})">✕</button>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+    }
+
+    setupEventListeners() {
+        // 作业管理按钮
+        document.getElementById('btnHomeworkManage').addEventListener('click', () => {
+            this.openHomeworkModal();
+        });
+
+        // 作业弹窗关闭按钮
+        document.getElementById('closeHomeworkModal').addEventListener('click', () => {
+            this.closeHomeworkModal();
+        });
+
+        // 作业标签页切换
+        document.querySelectorAll('.homework-tabs .tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.switchHomeworkTab(e.target.getAttribute('data-tab'));
+            });
+        });
+
+        // 作业表单提交
+        document.getElementById('homeworkForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.previewHomework();
+        });
+
+        // 作业预览按钮
+        document.getElementById('btnPreviewHomework').addEventListener('click', () => {
+            this.previewHomework();
+        });
+
+        // 确认发布按钮
+        document.getElementById('btnConfirmPublish').addEventListener('click', () => {
+            this.publishHomework();
+        });
+
+        // 关闭预览弹窗
+        document.getElementById('closePreviewModal').addEventListener('click', () => {
+            this.closePreviewModal();
+        });
+
+        // 返回编辑按钮
+        document.getElementById('btnClosePreview').addEventListener('click', () => {
+            this.closePreviewModal();
+        });
+
+        // 关闭物品商城弹窗
+        document.getElementById('closeItemMallModal').addEventListener('click', () => {
+            this.closeItemMallModal();
+        });
+
+        // 刷新作业列表
+        document.getElementById('btnRefreshHomework').addEventListener('click', () => {
+            this.loadHomeworkList();
+        });
+
+        // 作业审核过滤器
+        document.getElementById('reviewHomeworkFilter').addEventListener('change', () => {
+            this.loadSubmissionList();
+        });
+
+        // 审核弹窗按钮
+        document.getElementById('closeReviewModal').addEventListener('click', () => {
+            this.closeReviewModal();
+        });
+
+        document.getElementById('btnCancelReview').addEventListener('click', () => {
+            this.closeReviewModal();
+        });
+
+        document.getElementById('btnApproveSubmission').addEventListener('click', () => {
+            this.reviewSubmission(true);
+        });
+
+        document.getElementById('btnRejectSubmission').addEventListener('click', () => {
+            this.reviewSubmission(false);
+        });
+
+        // 快捷时间按钮
+        document.querySelectorAll('.quick-time-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const days = parseInt(btn.dataset.days);
+                this.setQuickDueDate(days);
+            });
+        });
+
+        // 保存草稿按钮
+        const btnSaveDraft = document.getElementById('btnSaveDraft');
+        if (btnSaveDraft) {
+            btnSaveDraft.addEventListener('click', () => {
+                this.saveDraft();
+            });
+        }
+
+        // 高级设置折叠
+        document.querySelectorAll('.form-section.collapsible .section-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const section = title.closest('.form-section');
+                const content = section.querySelector('.section-content');
+                const icon = title.querySelector('.toggle-icon');
+                
+                if (content.style.display === 'none') {
+                    content.style.display = 'block';
+                    icon.textContent = '▼';
+                } else {
+                    content.style.display = 'none';
+                    icon.textContent = '▶';
+                }
+            });
+        });
+    }
+
+    setQuickDueDate(days) {
+        const now = new Date();
+        now.setDate(now.getDate() + days);
+        now.setHours(23, 59, 0, 0);
+        const dueDate = now.toISOString().slice(0, 16);
+        document.getElementById('homeworkDueDate').value = dueDate;
+    }
+
+    saveDraft() {
+        const formData = this.getHomeworkFormData();
+        if (!formData) return;
+
+        const draft = {
+            ...formData,
+            requirements: this.requirements,
+            savedAt: Date.now()
+        };
+
+        localStorage.setItem('homework_draft', JSON.stringify(draft));
+        this.showToast('草稿保存成功！');
+    }
+
+    loadDraft() {
+        const saved = localStorage.getItem('homework_draft');
+        if (!saved) return;
+
+        try {
+            const draft = JSON.parse(saved);
+            
+            document.getElementById('homeworkTitle').value = draft.title || '';
+            document.getElementById('homeworkSubject').value = draft.subject || '语文';
+            document.getElementById('homeworkPoints').value = draft.points || 10;
+            document.getElementById('homeworkDifficulty').value = draft.difficulty || 'medium';
+            document.getElementById('homeworkDueDate').value = draft.dueDate || '';
+            
+            if (this.richTextEditor && draft.description) {
+                this.richTextEditor.setContent(draft.description);
+            }
+            
+            if (draft.requirements) {
+                this.requirements = draft.requirements;
+                this.renderRequirements();
+            }
+            
+            if (draft.categoryId) {
+                this.categoryManager.createCategorySelector('categorySelector', draft.categoryId);
+            }
+            
+            this.showToast('草稿已加载');
+        } catch (error) {
+            console.error('加载草稿失败:', error);
+        }
+    }
+
+    setupDefaultDueDate() {
+        const now = new Date();
+        now.setDate(now.getDate() + 7); // 默认7天后
+        const dueDate = now.toISOString().slice(0, 16);
+        document.getElementById('homeworkDueDate').value = dueDate;
+    }
+
+    openHomeworkModal() {
+        document.getElementById('homeworkModal').classList.add('active');
+        this.loadHomeworkList();
+        this.loadSubmissionList();
+    }
+
+    closeHomeworkModal() {
+        document.getElementById('homeworkModal').classList.remove('active');
+    }
+
+    closeItemMallModal() {
+        document.getElementById('itemMallModal').classList.remove('active');
+    }
+
+    switchHomeworkTab(tabName) {
+        // 更新标签页状态
+        document.querySelectorAll('.homework-tabs .tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+        // 更新内容面板
+        document.querySelectorAll('.tab-panel').forEach(panel => {
+            panel.classList.remove('active');
+        });
+        document.querySelector(`[data-panel="${tabName}"]`).classList.add('active');
+
+        // 加载对应数据
+        if (tabName === 'homework-list') {
+            this.loadHomeworkList();
+        } else if (tabName === 'review-homework') {
+            this.loadSubmissionList();
+        }
+    }
+
+    loadHomeworkList() {
+        const homeworkList = document.getElementById('homeworkList');
+        const homeworks = this.homeworkManager.getHomeworks('published');
+
+        if (homeworks.length === 0) {
+            homeworkList.innerHTML = '<div class="no-data">暂无已发布的作业</div>';
+            return;
+        }
+
+        let html = '';
+        homeworks.forEach(homework => {
+            const dueDate = new Date(homework.dueDate).toLocaleString('zh-CN');
+            const submissions = this.homeworkManager.submissions.filter(sub => 
+                sub.homeworkId === homework.id
+            );
+            const submittedCount = submissions.filter(sub => 
+                sub.status === 'submitted' || sub.status === 'reviewed'
+            ).length;
+
+            html += `
+                <div class="homework-item">
+                    <div class="homework-item-header">
+                        <div>
+                            <div class="homework-title">${homework.title}</div>
+                            <div class="homework-meta">
+                                <span>${homework.subject}</span>
+                                <span>${homework.type === 'written' ? '书面' : homework.type === 'practical' ? '实践' : homework.type === 'creative' ? '创意' : '复习'}</span>
+                                <span>${homework.points}积分</span>
+                            </div>
+                        </div>
+                        <div class="homework-actions">
+                            <button class="btn-view-submissions" onclick="adminUI.homeworkUI.viewSubmissions(${homework.id})">
+                                查看提交 (${submittedCount}/${submissions.length})
+                            </button>
+                            <button class="btn-close-homework" onclick="adminUI.homeworkUI.closeHomework(${homework.id})">
+                                关闭作业
+                            </button>
+                        </div>
+                    </div>
+                    <div class="homework-description">${homework.description}</div>
+                    <div class="homework-meta">
+                        <span>截止: ${dueDate}</span>
+                        <span>难度: ${homework.difficulty === 'easy' ? '简单' : homework.difficulty === 'medium' ? '中等' : '困难'}</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        homeworkList.innerHTML = html;
+    }
+
+    loadSubmissionList() {
+        const submissionList = document.getElementById('submissionList');
+        const filter = document.getElementById('reviewHomeworkFilter').value;
+        
+        let submissions = this.homeworkManager.submissions;
+        
+        if (filter === 'submitted') {
+            submissions = submissions.filter(sub => sub.status === 'submitted');
+        } else if (filter === 'reviewed') {
+            submissions = submissions.filter(sub => sub.status === 'reviewed');
+        }
+
+        if (submissions.length === 0) {
+            submissionList.innerHTML = '<div class="no-data">暂无待审核的作业</div>';
+            return;
+        }
+
+        let html = '';
+        submissions.forEach(submission => {
+            const homework = this.homeworkManager.homeworks.find(hw => hw.id === submission.homeworkId);
+            if (!homework) return;
+
+            const submittedAt = submission.submittedAt ? 
+                new Date(submission.submittedAt).toLocaleString('zh-CN') : '未提交';
+
+            html += `
+                <div class="submission-item ${submission.status}">
+                    <div class="submission-header">
+                        <div class="submission-student">${submission.studentName}</div>
+                        <div class="submission-status ${submission.status}">
+                            ${submission.status === 'not_started' ? '未开始' : 
+                              submission.status === 'in_progress' ? '进行中' : 
+                              submission.status === 'submitted' ? '已提交' : 
+                              submission.status === 'reviewed' ? '已审核' : '需修改'}
+                        </div>
+                    </div>
+                    <div class="submission-meta">
+                        <span>作业: ${homework.title}</span>
+                        <span>提交时间: ${submittedAt}</span>
+                    </div>
+                    <div class="submission-actions">
+                        <button class="btn-review" onclick="adminUI.homeworkUI.reviewSubmission(${submission.id})">
+                            审核作业
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+
+        submissionList.innerHTML = html;
+    }
+
+    previewHomework() {
+        const formData = this.getHomeworkFormData();
+        if (!formData) return;
+
+        const previewContent = document.getElementById('previewContent');
+        const requirements = formData.requirements.split('\n').filter(req => req.trim());
+
+        let html = `
+            <div class="preview-homework">
+                <h4>${formData.title}</h4>
+                <div class="preview-meta">
+                    <span style="color: ${formData.categoryColor}">${formData.categoryIcon} ${formData.type}</span>
+                    <span>${formData.subject}</span>
+                    <span>${formData.difficulty === 'easy' ? '⭐ 简单' : formData.difficulty === 'medium' ? '⭐⭐ 中等' : '⭐⭐⭐ 困难'}</span>
+                    <span>${formData.points}积分</span>
+                </div>
+                <div class="preview-description">${formData.description}</div>
+        `;
+
+        if (requirements.length > 0) {
+            html += `
+                <div class="preview-requirements">
+                    <h5>📋 作业要求：</h5>
+                    <ul>
+            `;
+            requirements.forEach(req => {
+                html += `<li>${req.trim()}</li>`;
+            });
+            html += `</ul></div>`;
+        }
+
+        if (formData.attachments && formData.attachments.length > 0) {
+            html += `
+                <div class="preview-attachments">
+                    <h5>📎 附件：</h5>
+                    <div class="attachment-list">
+            `;
+            formData.attachments.forEach(file => {
+                html += `<div class="attachment-item">📄 ${file.name}</div>`;
+            });
+            html += `</div></div>`;
+        }
+
+        html += `
+                <div class="preview-meta">
+                    <span>截止时间: ${new Date(formData.dueDate).toLocaleString('zh-CN')}</span>
+                    ${formData.publishTime ? `<span>发布时间: ${new Date(formData.publishTime).toLocaleString('zh-CN')}</span>` : ''}
+                </div>
+                <div class="preview-settings">
+                    ${formData.allowLateSubmit ? '<span>✓ 允许迟交</span>' : ''}
+                    ${formData.allowResubmit ? '<span>✓ 允许重新提交</span>' : ''}
+                    ${formData.sendNotification ? '<span>✓ 发送通知</span>' : ''}
+                </div>
+            </div>
+        `;
+
+        previewContent.innerHTML = html;
+        document.getElementById('homeworkPreviewModal').classList.add('active');
+    }
+
+    closePreviewModal() {
+        document.getElementById('homeworkPreviewModal').classList.remove('active');
+    }
+
+    publishHomework() {
+        const formData = this.getHomeworkFormData();
+        if (!formData) return;
+
+        const homework = this.homeworkManager.createHomework(formData);
+        this.homeworkManager.publishHomework(homework.id);
+
+        this.closePreviewModal();
+        this.closeHomeworkModal();
+        this.showToast('作业发布成功！');
+        
+        // 重置表单
+        document.getElementById('homeworkForm').reset();
+        this.requirements = [];
+        this.renderRequirements();
+        
+        if (this.richTextEditor) {
+            this.richTextEditor.clear();
+        }
+        
+        if (this.uploader) {
+            this.uploader.clearAllFiles();
+        }
+        
+        // 清除草稿
+        localStorage.removeItem('homework_draft');
+        
+        this.setupDefaultDueDate();
+    }
+
+    getHomeworkFormData() {
+        const title = document.getElementById('homeworkTitle').value.trim();
+        const dueDate = document.getElementById('homeworkDueDate').value;
+
+        if (!title) {
+            this.showToast('请填写作业标题');
+            return null;
+        }
+
+        if (!dueDate) {
+            this.showToast('请选择截止日期');
+            return null;
+        }
+
+        // 获取分类
+        const categoryId = document.getElementById('selectedCategory')?.value || '';
+        const category = this.categoryManager ? this.categoryManager.getCategoryById(categoryId) : null;
+
+        // 获取富文本内容
+        const description = this.richTextEditor ? this.richTextEditor.getContent() : '';
+
+        // 获取高级设置
+        const allowLateSubmit = document.getElementById('allowLateSubmit')?.checked || false;
+        const allowResubmit = document.getElementById('allowResubmit')?.checked || false;
+        const sendNotification = document.getElementById('sendNotification')?.checked || true;
+        const reminderTime = document.getElementById('reminderTime')?.value || '24';
+
+        // 获取发布时间
+        const publishTime = document.getElementById('homeworkPublishTime')?.value || null;
+
+        return {
+            title,
+            description,
+            type: category ? category.name : '书面作业',
+            categoryId: categoryId,
+            categoryIcon: category ? category.icon : '📝',
+            categoryColor: category ? category.color : '#667eea',
+            difficulty: document.getElementById('homeworkDifficulty').value,
+            subject: document.getElementById('homeworkSubject').value.trim() || '语文',
+            points: parseInt(document.getElementById('homeworkPoints').value) || 10,
+            dueDate: new Date(dueDate).toISOString(),
+            publishTime: publishTime ? new Date(publishTime).toISOString() : null,
+            requirements: this.requirements.join('\n'),
+            attachments: this.uploader ? this.uploader.getUploadedFiles() : [],
+            allowLateSubmit,
+            allowResubmit,
+            sendNotification,
+            reminderTime: parseInt(reminderTime)
+        };
+    }
+
+    viewSubmissions(homeworkId) {
+        // 切换到作业审核标签页
+        this.switchHomeworkTab('review-homework');
+        // 可以添加过滤功能，只显示该作业的提交
+    }
+
+    closeHomework(homeworkId) {
+        if (confirm('确定要关闭这个作业吗？关闭后将无法提交新作业。')) {
+            const homework = this.homeworkManager.homeworks.find(hw => hw.id === homeworkId);
+            if (homework) {
+                homework.status = 'closed';
+                this.homeworkManager.saveHomeworks();
+                this.loadHomeworkList();
+                this.showToast('作业已关闭');
+            }
+        }
+    }
+
+    reviewSubmission(submissionId) {
+        const submission = this.homeworkManager.submissions.find(sub => sub.id === submissionId);
+        if (!submission) return;
+
+        const homework = this.homeworkManager.homeworks.find(hw => hw.id === submission.homeworkId);
+        if (!homework) return;
+
+        this.currentReviewSubmission = submission;
+
+        const reviewContent = document.getElementById('reviewContent');
+        const images = this.homeworkManager.getSubmissionImages(submissionId);
+
+        let html = `
+            <div class="review-submission">
+                <h4>${homework.title}</h4>
+                <div class="review-student-info">
+                    <strong>学生:</strong> ${submission.studentName}<br>
+                    <strong>提交时间:</strong> ${submission.submittedAt ? new Date(submission.submittedAt).toLocaleString('zh-CN') : '未提交'}
+                </div>
+                <div class="review-content-text">
+                    <strong>作业内容:</strong><br>
+                    ${submission.content || '无文字内容'}
+                </div>
+        `;
+
+        if (images.length > 0) {
+            html += `
+                <div class="review-images">
+                    <strong>上传图片:</strong><br>
+            `;
+            images.forEach(img => {
+                html += `<img src="${img.url}" alt="${img.originalName}" class="review-image">`;
+            });
+            html += '</div>';
+        }
+
+        html += `
+                <div class="review-feedback">
+                    <strong>教师评语:</strong><br>
+                    <textarea id="reviewFeedback" placeholder="请输入评语...">${submission.teacherFeedback || ''}</textarea>
+                </div>
+            </div>
+        `;
+
+        reviewContent.innerHTML = html;
+        document.getElementById('reviewSubmissionModal').classList.add('active');
+    }
+
+    closeReviewModal() {
+        document.getElementById('reviewSubmissionModal').classList.remove('active');
+        this.currentReviewSubmission = null;
+    }
+
+    reviewSubmission(isApproved) {
+        if (!this.currentReviewSubmission) return;
+
+        const feedback = document.getElementById('reviewFeedback').value.trim();
+        const points = isApproved ? this.homeworkManager.homeworks.find(hw => 
+            hw.id === this.currentReviewSubmission.homeworkId
+        ).points : 0;
+
+        this.homeworkManager.reviewSubmission(
+            this.currentReviewSubmission.id, 
+            feedback, 
+            points
+        );
+
+        this.closeReviewModal();
+        this.loadSubmissionList();
+        this.showToast(isApproved ? '作业审核通过' : '作业需修改');
+    }
+
+    showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+}
+
 // ==================== 初始化 ====================
 document.addEventListener('DOMContentLoaded', () => {
     const dataManager = new DataManager();
     const adminUI = new AdminUI(dataManager);
+    const homeworkUI = new HomeworkManagerUI(dataManager);
 
     window.AdminApp = {
         data: dataManager,
-        ui: adminUI
+        ui: adminUI,
+        homeworkUI: homeworkUI
     };
 
     console.log('ClassPet Pro 管理端已加载！');

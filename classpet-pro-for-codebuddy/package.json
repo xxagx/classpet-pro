@@ -1,0 +1,22 @@
+{
+  "name": "classpet-pro",
+  "version": "3.0.0",
+  "description": "ClassPet Pro - 班级宠物激励系统",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server . -p 8080 -c-1",
+    "build": "echo 'No build required - static site'",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "classpet",
+    "education",
+    "gamification"
+  ],
+  "author": "贝贝老师",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "vercel": "^32.0.0"
+  }
+}

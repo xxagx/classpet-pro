@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ClassPet Pro 启动器</title>
+<hta:application 
+    id="oHTA" 
+    applicationname="ClassPetProLauncher" 
+    border="thin" 
+    caption="yes" 
+    showintaskbar="yes" 
+    singleinstance="yes" 
+    sysmenu="yes" 
+    scroll="no"
+    maximizable="no"
+    minimizeable="no"
+/>
+<style>
+    body {
+        font-family: 'Microsoft YaHei', Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+    }
+    .button {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        font-size: 18px;
+        border-radius: 30px;
+        cursor: pointer;
+        margin: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        transition: all 0.3s;
+    }
+    .button:hover {
+        transform: scale(1.05);
+    }
+    .status {
+        margin-top: 20px;
+        padding: 15px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+    }
+</style>
+</head>
+<body>
+    <h1>🎉 ClassPet Pro 启动器</h1>
+    <p>点击下方按钮启动服务器并打开应用</p>
+    
+    <button class="button" onclick="startServer()" id="startBtn">🚀 启动服务器</button>
+    
+    <div class="status" id="status" style="display:none;">
+        <p id="statusText">正在启动...</p>
+    </div>
+    
+    <script>
+        var shell = new ActiveXObject("WScript.Shell");
+        var fso = new ActiveXObject("Scripting.FileSystemObject");
+        
+        function startServer() {
+            var btn = document.getElementById('startBtn');
+            var status = document.getElementById('status');
+            var statusText = document.getElementById('statusText');
+            
+            btn.disabled = true;
+            btn.textContent = "启动中...";
+            status.style.display = "block";
+            
+            try {
+                // 获取当前目录
+                var scriptPath = location.pathname.replace(/\//g, "\\").substring(1);
+                var currentDir = fso.GetParentFolderName(scriptPath);
+                
+                statusText.innerHTML = "✅ 正在启动 HTTP 服务器...";
+                
+                // 启动 Python 服务器
+                var command = 'cmd /k "cd /d ' + currentDir + ' && python -m http.server 8080"';
+                shell.Run(command, 1, false);
+                
+                statusText.innerHTML = "⏳ 等待服务器启动...";
+                
+                // 等待 2 秒后打开浏览器
+                setTimeout(function() {
+                    statusText.innerHTML = "🌐 正在打开浏览器...";
+                    shell.Run("http://127.0.0.1:8080/mobile.html", 1, false);
+                    
+                    setTimeout(function() {
+                        statusText.innerHTML = "✅ 启动成功！<br>服务器正在运行，请在浏览器中使用应用。";
+                        btn.textContent = "✅ 已启动";
+                    }, 2000);
+                }, 2000);
+                
+            } catch (e) {
+                statusText.innerHTML = "❌ 启动失败：" + e.message;
+                btn.disabled = false;
+                btn.textContent = "重试";
+            }
+        }
+    </script>
+</body>
+</html>

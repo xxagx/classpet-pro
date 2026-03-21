@@ -1,0 +1,292 @@
+/* ClassPet Pro - 富文本编辑器样式 */
+
+/* 编辑器容器 */
+.rich-text-editor {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+}
+
+/* 工具栏 */
+.editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    gap: 4px;
+}
+
+.toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.toolbar-divider {
+    width: 1px;
+    height: 24px;
+    background: #ddd;
+    margin: 0 8px;
+}
+
+/* 工具栏按钮 */
+.toolbar-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid transparent;
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.toolbar-btn:hover {
+    background: #e9ecef;
+    border-color: #dee2e6;
+}
+
+.toolbar-btn:active {
+    background: #dee2e6;
+}
+
+.toolbar-btn.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+/* 下拉选择器 */
+.toolbar-select {
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.toolbar-select:hover {
+    border-color: #667eea;
+}
+
+.toolbar-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+/* 颜色选择器 */
+.color-picker {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+}
+
+/* 编辑区域 */
+.editor-content {
+    padding: 16px;
+    min-height: 100px;
+    max-height: 300px;
+    overflow-y: auto;
+    outline: none;
+    line-height: 1.6;
+    font-size: 14px;
+    color: #333;
+}
+
+.editor-content:empty:before {
+    content: attr(data-placeholder);
+    color: #999;
+    pointer-events: none;
+}
+
+.editor-content:focus {
+    background: #fafafa;
+}
+
+/* 编辑区域内容样式 */
+.editor-content p {
+    margin: 0 0 10px 0;
+}
+
+.editor-content p:last-child {
+    margin-bottom: 0;
+}
+
+.editor-content ul, .editor-content ol {
+    margin: 10px 0;
+    padding-left: 30px;
+}
+
+.editor-content blockquote {
+    margin: 10px 0;
+    padding: 10px 20px;
+    border-left: 4px solid #667eea;
+    background: #f8f9fa;
+    color: #666;
+}
+
+.editor-content pre {
+    margin: 10px 0;
+    padding: 12px;
+    background: #f5f5f5;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+}
+
+.editor-content code {
+    background: #f5f5f5;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+}
+
+.editor-content a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.editor-content a:hover {
+    text-decoration: underline;
+}
+
+.editor-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+/* 底部信息栏 */
+.editor-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-top: 1px solid #e0e0e0;
+    font-size: 12px;
+    color: #666;
+}
+
+.char-count, .word-count {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .editor-toolbar {
+        padding: 6px 8px;
+    }
+    
+    .toolbar-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+    
+    .toolbar-select {
+        height: 28px;
+        font-size: 11px;
+        padding: 0 6px;
+    }
+    
+    .toolbar-divider {
+        margin: 0 4px;
+    }
+    
+    .editor-content {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .editor-footer {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 4px;
+    }
+}
+
+/* 滚动条样式 */
+.editor-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.editor-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.editor-content::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+.editor-content::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* 焦点样式 */
+.editor-content:focus {
+    outline: none;
+    box-shadow: inset 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+/* 禁用状态 */
+.rich-text-editor.disabled .editor-toolbar {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.rich-text-editor.disabled .editor-content {
+    background: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+}
+
+/* 错误状态 */
+.rich-text-editor.error {
+    border-color: #f44336;
+}
+
+.rich-text-editor.error .editor-content {
+    background: #fff5f5;
+}
+
+/* 成功状态 */
+.rich-text-editor.success {
+    border-color: #4caf50;
+}
+
+/* 加载状态 */
+.rich-text-editor.loading .editor-content {
+    position: relative;
+}
+
+.rich-text-editor.loading .editor-content::after {
+    content: '加载中...';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #999;
+    font-size: 14px;
+}

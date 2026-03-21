@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据初始化工具 - ClassPet Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .status-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .status-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .status-value.success {
+            color: #10b981;
+        }
+
+        .status-value.warning {
+            color: #f59e0b;
+        }
+
+        .status-value.error {
+            color: #ef4444;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .data-preview {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .log-container {
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            margin-top: 20px;
+        }
+
+        .log-line {
+            margin: 5px 0;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .log-info {
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+        }
+
+        .log-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #34d399;
+        }
+
+        .log-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #fbbf24;
+        }
+
+        .log-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+        }
+
+        .progress-bar {
+            background: #e5e7eb;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 数据初始化工具</h1>
+            <p>确保学生数据和配置数据正确加载到 localStorage</p>
+        </div>
+
+        <div class="card">
+            <h2>📊 当前数据状态</h2>
+            <div class="status-grid">
+                <div class="status-item">
+                    <span class="status-label">学生数据</span>
+                    <span class="status-value" id="studentsStatus">检查中...</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">配置数据</span>
+                    <span class="status-value" id="configStatus">检查中...</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">宠物数据</span>
+                    <span class="status-value" id="petsStatus">检查中...</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">宠物数据库</span>
+                    <span class="status-value" id="petDbStatus">检查中...</span>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="checkCurrentData()">🔍 检查当前数据</button>
+                <button class="btn btn-success" onclick="initializeAllData()">✨ 初始化所有数据</button>
+                <button class="btn btn-warning" onclick="resetConfigData()">⚙️ 重置配置数据</button>
+                <button class="btn btn-danger" onclick="clearAllData()">🗑️ 清空所有数据</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📝 操作日志</h2>
+            <div class="log-container" id="logContainer"></div>
+        </div>
+
+        <div class="card">
+            <h2>🔬 数据预览</h2>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="previewData('students')">👥 学生数据</button>
+                <button class="btn btn-primary" onclick="previewData('config')">⚙️ 配置数据</button>
+                <button class="btn btn-primary" onclick="previewData('pets')">🐾 宠物数据</button>
+                <button class="btn btn-primary" onclick="previewData('petDatabase')">📚 宠物数据库</button>
+            </div>
+            <div class="data-preview" id="dataPreview">点击上方按钮预览数据</div>
+        </div>
+
+        <div class="card">
+            <h2>🚀 快速测试</h2>
+            <div class="btn-group">
+                <button class="btn btn-success" onclick="testMobilePage()">📱 打开移动端</button>
+                <button class="btn btn-success" onclick="testAdminPage()">💼 打开管理端</button>
+                <button class="btn btn-success" onclick="testDiagnosisTool()">🔧 打开诊断工具</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 默认学生数据
+        const DEFAULT_STUDENTS = [
+            { id: '1', name: '张小明', score: 150, pet: null },
+            { id: '2', name: '李小华', score: 200, pet: null },
+            { id: '3', name: '王小红', score: 180, pet: null },
+            { id: '4', name: '赵小刚', score: 220, pet: null },
+            { id: '5', name: '陈小芳', score: 170, pet: null },
+            { id: '6', name: '刘小强', score: 190, pet: null },
+            { id: '7', name: '周小丽', score: 210, pet: null },
+            { id: '8', name: '吴小军', score: 160, pet: null },
+            { id: '9', name: '郑小梅', score: 230, pet: null },
+            { id: '10', name: '孙小伟', score: 200, pet: null },
+            { id: '11', name: '马小娟', score: 175, pet: null },
+            { id: '12', name: '朱小辉', score: 195, pet: null },
+            { id: '13', name: '胡小燕', score: 215, pet: null },
+            { id: '14', name: '林小宇', score: 165, pet: null },
+            { id: '15', name: '何小敏', score: 225, pet: null },
+            { id: '16', name: '高小磊', score: 205, pet: null },
+            { id: '17', name: '罗小玲', score: 185, pet: null },
+            { id: '18', name: '梁小涛', score: 208, pet: null },
+            { id: '19', name: '宋小琳', score: 178, pet: null },
+            { id: '20', name: '唐小虎', score: 192, pet: null },
+            { id: '21', name: '韩小梅', score: 212, pet: null },
+            { id: '22', name: '冯小宇', score: 168, pet: null },
+            { id: '23', name: '于小敏', score: 228, pet: null },
+            { id: '24', name: '董小磊', score: 202, pet: null },
+            { id: '25', name: '萧小玲', score: 182, pet: null },
+            { id: '26', name: '程小涛', score: 207, pet: null },
+            { id: '27', name: '曹小琳', score: 177, pet: null },
+            { id: '28', name: '袁小虎', score: 193, pet: null },
+            { id: '29', name: '邓小梅', score: 213, pet: null },
+            { id: '30', name: '许小宇', score: 167, pet: null },
+            { id: '31', name: '傅小敏', score: 227, pet: null },
+            { id: '32', name: '沈小磊', score: 203, pet: null },
+            { id: '33', name: '曾小玲', score: 183, pet: null },
+            { id: '34', name: '彭小涛', score: 206, pet: null },
+            { id: '35', name: '吕小琳', score: 176, pet: null },
+            { id: '36', name: '苏小虎', score: 194, pet: null },
+            { id: '37', name: '卢小梅', score: 214, pet: null },
+            { id: '38', name: '蒋小宇', score: 166, pet: null }
+        ];
+
+        // 默认配置数据
+        const DEFAULT_CONFIG = {
+            className: '二年级一班',
+            teacherName: '王老师',
+            semester: '2025-2026学年第二学期',
+            scoreRules: {
+                goodBehavior: 10,
+                homework: 5,
+                test: 15,
+                activity: 20
+            },
+            petAdoptionCost: 500,
+            maxDailyInteraction: 3,
+            backgroundMusic: true,
+            soundEffects: true,
+            notifications: true,
+            autoSave: true,
+            theme: 'default',
+            language: 'zh-CN',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+
+        // 默认宠物数据库
+        const DEFAULT_PET_DATABASE = [
+            { id: 'cat', name: '小猫咪', emoji: '🐱', cost: 500, description: '温顺可爱的小猫咪' },
+            { id: 'dog', name: '小狗狗', emoji: '🐶', cost: 600, description: '忠诚活泼的小狗狗' },
+            { id: 'rabbit', name: '小兔子', emoji: '🐰', cost: 450, description: '软萌可爱的小兔子' },
+            { id: 'hamster', name: '小仓鼠', emoji: '🐹', cost: 400, description: '圆滚滚的小仓鼠' },
+            { id: 'bird', name: '小鸟儿', emoji: '🐦', cost: 550, description: '会唱歌的小鸟儿' },
+            { id: 'fish', name: '小鱼儿', emoji: '🐟', cost: 350, description: '自由自在的小鱼儿' }
+        ];
+
+        // 添加日志
+        function addLog(message, type = 'info') {
+            const logContainer = document.getElementById('logContainer');
+            const timestamp = new Date().toLocaleTimeString('zh-CN');
+            const logLine = document.createElement('div');
+            logLine.className = `log-line log-${type}`;
+            logLine.textContent = `[${timestamp}] ${message}`;
+            logContainer.appendChild(logLine);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // 更新状态
+        function updateStatus(elementId, text, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = text;
+            element.className = `status-value ${type}`;
+        }
+
+        // 检查当前数据
+        function checkCurrentData() {
+            addLog('开始检查当前数据...', 'info');
+
+            try {
+                // 检查学生数据
+                const students = localStorage.getItem('classpet_students');
+                if (students) {
+                    const parsed = JSON.parse(students);
+                    updateStatus('studentsStatus', `${parsed.length} 个`, 'success');
+                    addLog(`✅ 学生数据: ${parsed.length} 个学生`, 'success');
+                } else {
+                    updateStatus('studentsStatus', '未找到', 'error');
+                    addLog('❌ 学生数据: 未找到', 'error');
+                }
+
+                // 检查配置数据
+                const config = localStorage.getItem('classpet_config');
+                if (config) {
+                    updateStatus('configStatus', '已加载', 'success');
+                    addLog('✅ 配置数据: 已加载', 'success');
+                } else {
+                    updateStatus('configStatus', '未找到', 'error');
+                    addLog('❌ 配置数据: 未找到', 'error');
+                }
+
+                // 检查宠物数据
+                const pets = localStorage.getItem('classpet_pets');
+                if (pets) {
+                    const parsed = JSON.parse(pets);
+                    updateStatus('petsStatus', `${Object.keys(parsed).length} 只`, 'success');
+                    addLog(`✅ 宠物数据: ${Object.keys(parsed).length} 只宠物`, 'success');
+                } else {
+                    updateStatus('petsStatus', '未找到', 'warning');
+                    addLog('⚠️ 宠物数据: 未找到（正常，认养后会创建）', 'warning');
+                }
+
+                // 检查宠物数据库
+                const petDb = localStorage.getItem('classpet_pet_database');
+                if (petDb) {
+                    const parsed = JSON.parse(petDb);
+                    updateStatus('petDbStatus', `${parsed.length} 种`, 'success');
+                    addLog(`✅ 宠物数据库: ${parsed.length} 种宠物`, 'success');
+                } else {
+                    updateStatus('petDbStatus', '未找到', 'warning');
+                    addLog('⚠️ 宠物数据库: 未找到', 'warning');
+                }
+
+                addLog('数据检查完成', 'success');
+            } catch (error) {
+                addLog(`❌ 数据检查失败: ${error.message}`, 'error');
+                console.error(error);
+            }
+        }
+
+        // 初始化所有数据
+        function initializeAllData() {
+            addLog('开始初始化所有数据...', 'info');
+
+            try {
+                // 初始化学生数据
+                localStorage.setItem('classpet_students', JSON.stringify(DEFAULT_STUDENTS));
+                addLog('✅ 学生数据已初始化', 'success');
+
+                // 初始化配置数据
+                localStorage.setItem('classpet_config', JSON.stringify(DEFAULT_CONFIG));
+                addLog('✅ 配置数据已初始化', 'success');
+
+                // 初始化宠物数据库
+                localStorage.setItem('classpet_pet_database', JSON.stringify(DEFAULT_PET_DATABASE));
+                addLog('✅ 宠物数据库已初始化', 'success');
+
+                // 初始化宠物数据（空对象）
+                localStorage.setItem('classpet_pets', JSON.stringify({}));
+                addLog('✅ 宠物数据已初始化', 'success');
+
+                addLog('🎉 所有数据初始化完成！', 'success');
+                checkCurrentData();
+            } catch (error) {
+                addLog(`❌ 数据初始化失败: ${error.message}`, 'error');
+                console.error(error);
+            }
+        }
+
+        // 重置配置数据
+        function resetConfigData() {
+            addLog('开始重置配置数据...', 'info');
+
+            try {
+                localStorage.setItem('classpet_config', JSON.stringify(DEFAULT_CONFIG));
+                addLog('✅ 配置数据已重置', 'success');
+                checkCurrentData();
+            } catch (error) {
+                addLog(`❌ 配置数据重置失败: ${error.message}`, 'error');
+                console.error(error);
+            }
+        }
+
+        // 清空所有数据
+        function clearAllData() {
+            if (!confirm('确定要清空所有数据吗？此操作不可恢复！')) {
+                return;
+            }
+
+            addLog('开始清空所有数据...', 'warning');
+
+            try {
+                localStorage.removeItem('classpet_students');
+                localStorage.removeItem('classpet_config');
+                localStorage.removeItem('classpet_pets');
+                localStorage.removeItem('classpet_pet_database');
+                localStorage.removeItem('classpet_current_student');
+
+                addLog('🗑️ 所有数据已清空', 'warning');
+                checkCurrentData();
+            } catch (error) {
+                addLog(`❌ 数据清空失败: ${error.message}`, 'error');
+                console.error(error);
+            }
+        }
+
+        // 预览数据
+        function previewData(type) {
+            const preview = document.getElementById('dataPreview');
+
+            try {
+                let data;
+                let key;
+
+                switch (type) {
+                    case 'students':
+                        key = 'classpet_students';
+                        break;
+                    case 'config':
+                        key = 'classpet_config';
+                        break;
+                    case 'pets':
+                        key = 'classpet_pets';
+                        break;
+                    case 'petDatabase':
+                        key = 'classpet_pet_database';
+                        break;
+                }
+
+                data = localStorage.getItem(key);
+
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    preview.textContent = JSON.stringify(parsed, null, 2);
+                    addLog(`✅ 已加载 ${type} 数据预览`, 'success');
+                } else {
+                    preview.textContent = '数据不存在，请先初始化';
+                    addLog(`⚠️ ${type} 数据不存在`, 'warning');
+                }
+            } catch (error) {
+                preview.textContent = `加载失败: ${error.message}`;
+                addLog(`❌ 数据预览失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 测试页面
+        function testMobilePage() {
+            window.open('mobile.html', '_blank');
+            addLog('📱 已打开移动端页面', 'info');
+        }
+
+        function testAdminPage() {
+            window.open('admin.html', '_blank');
+            addLog('💼 已打开管理端页面', 'info');
+        }
+
+        function testDiagnosisTool() {
+            window.open('mobile-diagnosis.html', '_blank');
+            addLog('🔧 已打开诊断工具', 'info');
+        }
+
+        // 页面加载时自动检查
+        window.onload = function() {
+            addLog('🚀 数据初始化工具已启动', 'success');
+            checkCurrentData();
+        };
+    </script>
+</body>
+</html>
